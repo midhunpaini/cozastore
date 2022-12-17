@@ -1,0 +1,50 @@
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+        <div class="container-fluid">
+                <div class="col-12 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                        <h2 class="tm-block-title"> Order No: <strong>{{order_id}}</strong> </h2>
+                        <table class="table">
+                           <thead>
+                             <th>PRODUCT</th>
+                             <th>QUANTITY</th>
+                             <th>PRICE</th>
+                             <th>STATUS</th>
+                             <th>ACTION</th>
+                           </thead>
+                           <tbody>
+                              {% for order in ordercart %}
+                                <tr>
+                                    <td>{{ order.product.name }}</td>
+                                    <td>{{ order.quantity }}</td>
+                                    <td>{{ order.product.price }}</td>
+                                    <td id="cancel_order_button"> {% if order.customer_order_status == 'succes' %}
+                                        <p class="badge badge-success">Completed </p>
+                                    {% elif order.customer_order_status == 'pending' %} 
+                                        <p class="badge badge-warning">Pending </p>
+                                    {% elif order.customer_order_status == 'return' %} 
+                                        <p class="badge badge-primary">Returned </p>
+                                    {% else %} 
+                                        <p class="badge badge-danger">Canceled </p>                                        
+                                    {% endif %}
+                                    </td>
+                                    <td >
+                                    <div>
+                                    {% if order.customer_order_status == 'pending' %} 
+                                        <button class="btn badge badge-success confirm_order_admin">Confirm </button>
+                                        <input type="text" value="{{order_id}}" hidden> 
+                                        <button class="btn badge badge-danger cancel_order">Cancel </button>
+                                        <input type="text" value="{{order.id}}" hidden>                                                                             
+                                    {% endif %}
+                                    </div>
+                                    </td> 
+                                </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+{%endblock%}

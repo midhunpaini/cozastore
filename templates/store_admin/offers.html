@@ -1,0 +1,214 @@
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+
+<div class="container">
+    <div class="m-5">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#add_coupon">Add Coupon Offer</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#add_category_offer">Add Category Offer</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#add_product_offer">Add Product Offer</button>
+    </div>
+    
+    <table class="table table-hover tm-table-small tm-product-table mt-5 text-center">
+        <thead>
+            <h3 style="margin-left: 20px;"><strong style="color: white;">Active Offers</strong></h3>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Discount Type</th>
+            <th scope="col">Minimum Amount</th>
+            <th scope="col">Start date</th>
+            <th scope="col">End date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>                   
+            {%for offer in coupon_offers%}
+          <tr>
+            <th scope="row">Coupon Offer {{offer.id}}</th>
+        
+            <td class="tm-product-name">{{ offer.discount }}</td>
+            <td class="tm-product-name">{{offer.discount_type}}</td>
+            <td class="tm-product-name">{{ offer.minimum_amount }}</td>
+            <td class="tm-product-name">{{ offer.date }}</td>
+            <td class="tm-product-name">{{ offer.validity }}</td>
+            {% if offer.is_expired %}
+            <td class="tm-product-name">Expired</td>
+            {% else %}
+            <td class="tm-product-name">Active</td>
+            {% endif %} 
+             {% if not offer.is_expired %}
+             <td> <button class="btn btn-danger btn-block text-uppercase stop_offer" type="button" offer_type ='coupon'  name="stop_offer" value="{{offer.id}}"> Stop</button></td> 
+             {% endif %}
+          </tr>
+            {%endfor%} 
+
+            {%for offer in category_offers%}
+            <tr>
+              <th scope="row">Category Offer {{offer.id}}</th>
+          
+              <td class="tm-product-name">{{ offer.discount }}</td>
+              <td class="tm-product-name">{{offer.discount_type}}</td>
+              <td class="tm-product-name">{{ offer.minimum_amount }}</td>
+              <td class="tm-product-name">{{ offer.date }}</td>
+              <td class="tm-product-name">{{ offer.validity }}</td>
+              {% if offer.is_expired %}
+              <td class="tm-product-name">Expired</td>
+              {% else %}
+              <td class="tm-product-name">Active</td>
+              {% endif %} 
+               {% if not offer.is_expired %}
+               <td> <button class="btn btn-danger btn-block text-uppercase stop_offer" offer_type ='category' type="button" name="stop_offer" value="{{offer.id}}"> Stop</button></td> 
+               {% endif %}
+            </tr>
+              {%endfor%} 
+
+
+              {%for offer in product_offers%}
+              <tr>
+                <th scope="row">Product Offer {{offer.id}}</th>
+            
+                <td class="tm-product-name">{{ offer.discount }}</td>
+                <td class="tm-product-name">{{offer.discount_type}}</td>
+                <td class="tm-product-name">{{ offer.minimum_amount }}</td>
+                <td class="tm-product-name">{{ offer.date }}</td>
+                <td class="tm-product-name">{{ offer.validity }}</td>
+                {% if offer.is_expired %}
+                <td class="tm-product-name">Expired</td>
+                {% else %}
+                <td class="tm-product-name">Active</td>
+                {% endif %} 
+                 {% if not offer.is_expired %}
+                 <td> <button class="btn btn-danger btn-block text-uppercase stop_offer" offer_type ='product' type="button" name="stop_offer" value="{{offer.id}}"> Stop</button></td> 
+                 {% endif %}
+              </tr>
+                {%endfor%} 
+        </tbody>
+      </table>
+</div>
+
+
+
+  
+  <!-- Modal Add coupon-->
+  <div class="modal fade" id="add_coupon" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content bg-info">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <form class="row g-3" id="add_coupon_form" method="POST">
+            {%csrf_token%}
+            <div class="col-md-12 m-2">
+                {{ form.name }}
+            </div>
+            <div class="col-md-12 m-2">
+                {{ form.coupon_code }}
+            </div>
+            <div class="col-md-12 m-2">
+                {{ form.discount }}
+            </div>
+            <div class="col-md-12 m-2">
+                {{ form.discount_type }}
+            </div>
+            <div class="col-md-12 m-2">
+                {{ form.minimum_amount }}
+            </div>
+            <div class="col-md-12 m-2">
+                <label for="coupon_validity">Validity</label>
+                {{ form.validity }}
+            </div>
+            
+            
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+    <!-- Modal Add category offer-->
+    <div class="modal fade" id="add_category_offer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+          <div class="modal-content bg-info">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel1">Add Category offer</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <form class="row g-3" id="category_offer_form">
+                <div class="col-md-12 m-2">
+                    {{ category_form.category }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ category_form.discount }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ category_form.discount_type }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ category_form.minimum_amount }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ category_form.validity }}
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="add_product_offer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+          <div class="modal-content bg-info">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel2">Add Product offer</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <form class="row g-3" id="product_offer_form">
+                <div class="col-md-12 m-2">
+                    {{ product_form.product }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ product_form.discount }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ product_form.discount_type }}
+                </div>
+                <div class="col-md-12 m-2" hidden>
+                    {{ product_form.minimum_amount }}
+                </div>
+                <div class="col-md-12 m-2">
+                    {{ product_form.validity }}
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+{%endblock%}

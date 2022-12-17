@@ -1,0 +1,127 @@
+{% load cart %}
+{% for order in orders %}                  
+<div class="order my-3 bg-light">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="d-flex flex-column justify-content-between order-summary">
+                <div class="d-flex align-items-center">
+                    <div class="text-uppercase">Order #{{ order.id }}</div>
+                </div>
+                <div class="fs-8">Payment Method: {{ order.payment_method }} </div>
+                <div class="fs-8">{{ order.order_date }}</div>
+                {% if order.order_status == 'delivered' %} Return By {{ order.order_date|return_date }} {% endif %}
+                
+                {% if order.order_status != 'canceled' and order.order_status != 'return' and order.payment_status == 'success' %}
+                <div class="fs-8"><a href="{% url 'create_invoice' order.id %}" target="_blank" class="card-text">Download Invoice</a></div> 
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="d-sm-flex align-items-sm-start justify-content-sm-between">
+                <div class="status">Status : {{ order.order_status }}</div>
+                {% if order.returnOrder == True and order.order_status == 'delivered'%}
+                <button class="btn btn-outline-danger ms-auto customer_order_return" cid="{{order.items.id}}" oid="{{order.id}}">Return</button> 
+                {% endif %}
+                <button class="btn btn-primary text-uppercase ms-2 order-info-button" data-bs-toggle="modal" data-bs-target="#order_info_modal" cid="{{order.items.id}}" oid="{{order.id}}">order info</button>
+            </div>
+            <div class="progressbar-track">
+                <ul class="progressbar">
+                    {% if order.order_status == 'canceled' %}
+                    <li id="step-1" class="text-muted ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    <li id="step-4" class="text-muted">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                    {%elif order.order_status == 'pending'%}
+                    <li id="step-1" class="text-muted green ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted ">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    
+                    <li id="step-4" class="text-muted ">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted ">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                   
+                    {%elif order.order_status == 'accepted'%}
+                    <li id="step-1" class="text-muted green ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted green">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    
+                    <li id="step-4" class="text-muted ">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted ">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                    
+                    {%elif order.order_status == 'shipped'%}
+                    <li id="step-1" class="text-muted green ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted green">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    
+                    <li id="step-4" class="text-muted green">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted ">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                  
+                    {%elif order.order_status == 'delivered'%}
+                    <li id="step-1" class="text-muted green ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted green">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    
+                    <li id="step-4" class="text-muted green">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted green">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                    {%elif order.order_status == 'return'%}
+                    <li id="step-1" class="text-muted green ">
+                        <span class="fas fa-gift"></span>
+                    </li>
+                    <li id="step-2" class="text-muted green">
+                        <span class="fas fa-check"></span>
+                    </li>
+                    
+                    <li id="step-4" class="text-muted green">
+                        <span class="fas fa-truck"></span>
+                    </li>
+                    <li id="step-5" class="text-muted green">
+                        <span class="fas fa-box-open"></span>
+                    </li>
+                    <li id="step-3" class="text-danger ">
+                        <span class="fas fa-undo"></span>
+                    </li>
+                    {% endif %}
+                   
+                </ul>
+                <div id="tracker"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'store/partials/order-info.html'%}
+{%endfor%}

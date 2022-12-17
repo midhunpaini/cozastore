@@ -1,0 +1,143 @@
+<button type="button" class=" btn btn-outline-danger m-5" style="width: 200px; height: 60px; margin-left: 50px;" id="add_address" data-bs-toggle="modal" data-bs-target="#add_address_modal">Add new Address</button>
+
+  <div class="profile_address row" id="profile_address" >
+    {% for address in addresses %}
+      <div class="col-4">
+      <input hidden type="text" value="{{address.id}}" id="address_card_id">
+      <div class="card m-5 profile_address_card" id="{{address.id}}" style="width: 20rem;">
+        <div class="card-header">
+        <strong>{{ address.shipping_address.fname|capfirst }}</strong>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Mobile: {{ address.shipping_address.phone}}</h5>
+          <p class="card-text">Email: {{ address.shipping_address.email}}</p>
+          <p class="card-text">Address: {{ address.shipping_address.address1}} </p>
+          <p class="card-text">{{ address.shipping_address.address2}}</p>
+          <p class="card-text">State: {{ address.shipping_address.state}}</p>
+          <p class="card-text">Pin: {{ address.shipping_address.pincode}}</p>
+          <div class="d-flex">
+            <button class="btn btn-secondary edit_address" data-bs-toggle="modal" data-bs-target="#edit_address_Modal">Edit</button>
+            <input type="text" value="{{ address.shipping_address.fname|capfirst }}" hidden>
+            <input type="text" value="{{ address.shipping_address.lname|capfirst }}" hidden>
+            <input type="text" value="{{ address.shipping_address.email}}" hidden>
+            <input type="text" value="{{ address.shipping_address.phone}}" hidden>
+            <input type="text" value="{{ address.shipping_address.address1}}" hidden>
+            <input type="text" value="{{ address.shipping_address.address2}}" hidden>
+            <input type="text" value="{{ address.shipping_address.state}}" hidden>
+            <input type="text" value="{{ address.shipping_address.pincode}}" hidden>
+            <input type="text" value="{{ address.shipping_address.id}}" hidden>
+            <button type="button" class="btn btn-danger ms-auto delete_address">Delete</button>
+            <input type="text" value="{{address.id}}" hidden>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+
+  <!-- Modal edit address-->
+<div class="modal fade" id="edit_address_Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 1500;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" id="edit_address_form" method="post">
+            {%csrf_token%}
+            <div class="col-md-6">
+              <input type="text"value="" hidden id="edit_address_id">
+              <label for="inputEmail4" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="edit_fname" name="edit_fname">
+            </div>
+            <div class="col-md-6">
+              <label for="inputEmail4" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="edit_lname" name="edit_lname">
+            </div>
+            <div class="col-md-6">
+              <label for="inputEmail4" class="form-label">Email</label>
+              <input type="email" class="form-control" id="edit_email" name="edit_email">
+            </div>
+            <div class="col-md-6">
+              <label for="inputPassword4" class="form-label">Mobile</label>
+              <input type="test" class="form-control" id="edit_mobile" name="edit_mobile">
+            </div>
+            <div class="col-12">
+              <label for="inputAddress" class="form-label">Address line 1</label>
+              <input type="text" class="form-control" id="edit_address" name="edit_address" placeholder="1234 Main St">
+            </div>
+            <div class="col-12">
+              <label for="inputAddress2" class="form-label">Address line 2</label>
+              <input type="text" class="form-control" id="edit_address2" name="edit_address2" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">State</label>
+              <input type="text" class="form-control" id="edit_state" name="edit_state">
+            </div>
+            <div class="col-md-6">
+              <label for="inputZip" class="form-label">Pincode</label>
+              <input type="text" class="form-control" id="edit_pin" name="edit_pin">
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+<div class="modal fade" id="add_address_modal" tabindex="-1" aria-labelledby="add_add_label" aria-hidden="true" style="z-index: 1500;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="add_add_label">Add Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-3" id="add_address_form" action="{% url 'add_customer_address' %}" method="POST">
+          {%csrf_token%}
+          <p>{{ address_form.errors }}</p>
+          <div class="col-md-6">
+            <input type="text"value="" hidden id="add_address_id" name="">
+            {{ address_form.fname }}
+          </div>
+          <div class="col-md-6">
+            {{ address_form.lname }}
+          </div>
+          <div class="col-md-6">
+            {{ address_form.email }}
+          </div>
+          <div class="col-md-6">
+            {{ address_form.phone }}
+          </div>
+          <div class="col-12">
+            {{ address_form.address1 }}
+          </div>
+          <div class="col-12">
+            {{ address_form.address2 }}
+          </div>
+          <div class="col-md-6">
+            {{ address_form.state}}
+          </div>
+          <div class="col-md-6">
+            {{ address_form.pincode }}
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+     
+        <button type="submit" class="btn btn-primary mx-auto">Save</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>

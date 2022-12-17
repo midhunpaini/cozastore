@@ -1,0 +1,199 @@
+{%extends 'store/base2.html'%}
+{%load static%}
+{% load cart%}
+{%block content%}
+<script src="https://www.paypal.com/sdk/js?client-id=ASlw37aHr4cWEZosTZDR2bCNn6UGFa4D_GQt-bu3fkouJWEmSrRt0ghjry0KxmHn9NKuKhbBKK_G_kt_&currency=USD"></script>
+<div class="site-wrap" style="margin-top: 100px;" id="order_page">
+    <div class="site-section">
+      <div class="container" >
+        <form id="order_form" >
+          {% csrf_token%}
+          <div class="row">
+            <div class="col-md-6 mb-5 mb-md-0">
+             
+              <h2 class="h3 mb-3 text-black">Billing Details</h2>
+              <div class="p-3 p-lg-5 border"> 
+                <div class="form-group row" >
+                  
+                  {%if addresses%}
+                  {%for address in addresses%}
+                  <div class="form-check" add_id="{{address.id}}" id="added_add">
+                    <input class="form-check-input" type="radio" name="address_option" value="{{address.id}}">
+                    <label class="form-check-label" for="flexRadioDefault1">{{ forloop.counter }}
+                      <div class="card" style="width: 28rem;">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ address.shipping_address.fname }}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{ address.shipping_address.address1 }}</h6>
+                          <p class="card-text">{{ address.shipping_address.email }}</p>
+                          <p class="card-text">{{ address.shipping_address.phone }}</p>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                  {%endfor%}
+                  {%endif%}
+                 
+                  <div class="form-check">
+                    <input hidden class="form-check-input" type="radio" name="address_option" value="new" id="new_address" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                    </div>  
+                    <div class="form-group">
+                      <label for="c_ship_different_address" class="text-black" data-toggle="collapse" href="#ship_different_address" role="button" aria-expanded="false" aria-controls="ship_different_address">
+                        <input class="btn btn-secondary " value="Add Address" type="button" id="c_ship_different_address" style="width: 100%;"> 
+                      </label>
+                      <div class="collapse" id="ship_different_address">
+                        <div class="py-2">
+                          <div class="form-group row">
+                            <div class="col-md-6">
+                              <label for="c_diff_fname" class="text-black">First Name <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="fname" id="fname">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="c_diff_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="lname" id="lname">
+                            </div>
+                          </div>
+  
+                          <div class="form-group row">
+                            <div class="col-md-12">
+                              <label for="c_diff_address" class="text-black">Address <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="address1" name="address1" placeholder="Street address">
+                            </div>
+                          </div>
+  
+                          <div class="form-group">
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment, suite, unit etc. (optional)">
+                          </div>
+  
+                          <div class="form-group row">
+                            <div class="col-md-6">
+                              <label for="c_diff_state_country" class="text-black">State<span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="state" name="state">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="c_diff_postal_zip" class="text-black">PIN<span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="pincode" name="pincode">
+                            </div>
+                          </div>
+  
+                          <div class="form-group row mb-5">
+                            <div class="col-md-6">
+                              <label for="c_diff_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="email" name="email">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="c_diff_phone" class="text-black">Phone <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                            </div>
+                          </div>
+                        </div>
+                        {%if not customer_name %}
+                        <button class="btn btn-secondary" id="signup_order" type="button" style="width: 100%;">SignUp/Signin</button>
+                        {%else%}
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="save_address">
+                          <label class="form-check-label" for="save_address">
+                            Save Address
+                          </label>
+                        </div>
+                        {%endif%}
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+                
+              </div>
+             
+            <div class="col-md-6">
+              <div class="row mb-5">
+                <div class="col-md-12">
+                  <h2 class="h3 mb-3 text-black">Your Order</h2>
+                  <div class="p-3 p-lg-5 border">
+                    <table class="table site-block-order-table mb-5">
+                      <thead>
+                        <th>Product</th>
+                        <th>Total</th>
+                      </thead>
+                      <tbody>
+                        {%for item in cart_products %}
+                        <tr>
+                          <td>{{item.name}} <strong class="mx-2">x</strong> {{item|cart_quantity:request.session.cart}}</td>
+                          <td>₹{{item|price_total:request.session.cart}}</td>
+                        </tr>
+                        {%endfor%}
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong id="sub_total" sub = "{{cart_products|total_cart_price_discount:request.session.cart}}">Cart Subtotal</strong></td>
+                          <td class="text-black" >₹ {{cart_products|total_cart_price_discount:request.session.cart}}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong>Discount</strong></td>
+                          <td class="text-black"id='discount_amount' dis="{{ cart_products|total_discount:request.session.cart }}">₹{{ cart_products|total_discount:request.session.cart }}</td>
+                        </tr>
+                        <tr>
+                          <div class="flex-w flex-m m-r-20 m-tb-5">
+                            <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code" id="coupon_input">
+                            <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" id="coupon_btn">
+                              Apply coupon
+                            </div>
+                          </div>
+                        </tr>
+                        <tr>
+                          <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                          <td class="text-black font-weight-bold" ><strong id="order_total">₹{{cart_products|total_cart_price:request.session.cart}}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                      
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" value="cod" name="payment_option" id="cod" checked>
+                          <label class="form-check-label" for="cod">
+                            Cash on Delivey
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="payment_option" id="paypal" value="paypal">
+                          <label class="form-check-label" for="paypal">
+                            Paypal
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="payment_option" id="rzp-button" value="razorpay">
+                          <label class="form-check-label" for="paypal">
+                            Razorpay
+                          </label>
+                        </div>
+                        <div id="paypal-button-container"></div>
+                        <!-- <button id="rzp-button1">Pay</button> -->
+                      {% if request.session.user_id %}
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-secondary btn-lg py-3 btn-block rounded-pil" id="rzp-button1">Place Order</button>
+                        </div>
+                      {% else %}
+                      <div class="form-group">
+                        <a href="{% url 'signin' %}" type="submit" class="btn btn-secondary btn-lg py-3 btn-block rounded-pil" id="order_guest">Login to Continue</a>
+                      </div>
+                      {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section" id="order_success" style="display: none;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <span class="icon-check_circle display-3 text-success"></span>
+          <h2 class="display-3 text-black">Thank you!</h2>
+          <p class="lead mb-5">You order was successfuly completed.</p>
+          <p><a href="{% url 'product' %}" class="btn btn-sm btn-primary">Back to shop</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+{% load cart %}
+        <div class="container-fluid">
+                <div class="col-12 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                        <h2 class="tm-block-title">Orders List</h2>
+                        <table class="table text-center">
+                            <thead >
+                                <tr>
+                                    <th scope="col">ORDER NO.</th>
+                                    <th scope="col">PRODUCT</th>
+                                    <th scope="col">PRICE</th>
+                                    <th scope="col">DISCOUNT</th>
+                                    <th scope="col">FINAL PRICE</th>
+                                    <th scope="col">ORDER DATE</th>
+                                    <th scope="col">PAYMENT</th>
+                                    <th scope="col">PAYMENT STATUS</th>
+                                    <th scope="col">ORDER STATUS</th>
+                                    <th scope="col">ACTION</th>
+                                    <!-- <th scope="col">EST DELIVERY DUE</th> -->
+                                </tr>
+                            </thead>
+                            <tbody><b>
+                                {% load mathfilters %}
+                                {% for order in all_orders %}
+                                <tr >
+                                    <th scope="row"><b># {{ order.id }}</b></th>
+                                    <td></b>{{ order.items.product.name }}</b></td>       
+                                    <td><b>{{ order.items.product.price }}</b></td>
+                                    <td><b>{{ order.items.product.price|sub:order.order_price }}</b></td>
+                                    <td><b>{{ order.order_price}}</b></td>
+                                    <td><b>{{ order.order_date }}</b></td>
+                                    <td><b>{{ order.payment_method }}</b></td>
+                                    <td><b>{{ order.payment_status }}</b></td>
+                                    <td id="cancel_order_button">
+                                        {% if order.order_status == 'accepted' %}
+                                            <button class="badge badge-primary">Accepted </button>
+                                        {% elif order.order_status == 'pending' %} 
+                                            <button class="badge badge-warning">Pending </button>
+                                        {% elif order.order_status == 'return' %} 
+                                            <button class="badge badge-danger">Returned </button>
+                                        {% elif order.order_status == 'shipped' %} 
+                                            <button class="badge badge-primary">Shipped </button>
+                                        {% elif order.order_status == 'delivered' %} 
+                                            <button class="badge badge-success">Delivered </button>
+                                        {% else %} 
+                                            <button class="badge badge-danger">Canceled </button>                                        
+                                        {% endif %}
+                                    </td>
+                                    <td >
+                                        <div>
+                                        {% if order.order_status == 'pending' %} 
+                                            <button class="btn badge badge-success confirm_order_admin">Accept</button>
+                                            <input type="text" value="{{order.id}}" hidden> 
+                                            <button class="btn badge badge-danger cancel_order"> Cancel </button>
+                                            <input type="text" value="{{order.items.id}}" hidden>
+                                        {%elif order.order_status == 'accepted' %}
+                                            <button class="btn badge badge-success ship_order_admin">Ship </button>
+                                            <input type="text" value="{{order.id}}" hidden> 
+                                            <button class="btn badge badge-danger cancel_order"> Cancel </button>
+                                            <input type="text" value="{{order.items.id}}" hidden>
+                                        {%elif order.order_status == 'shipped' %}
+                                            <button class="btn badge badge-success deliver_order_admin">Confirm Delivery</button>
+                                            <input type="text" value="{{order.id}}" hidden> 
+                                        {%elif order.order_status == 'canceled' and order.payment_status == 'success' %}
+                                            <button class="btn badge badge-warning deliver_order_admin">Refund Amount</button>
+                                            <input type="text" value="{{order.id}}" hidden> 
+                                        {%elif order.order_status == 'return' and order.payment_status == 'success' %}
+                                            <button class="btn badge badge-warning refund_order_admin">Refund Amount</button>
+                                            <input type="text" value="{{order.id}}" hidden> 
+                                        {% endif %}
+                                        </div>
+                                    </td> 
+                                </tr>  
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+{%endblock%}

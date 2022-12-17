@@ -1,0 +1,142 @@
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+    <div class="container tm-mt-big tm-mb-big">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mx-auto">
+          <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class="row">
+              <div class="col-12">
+                <h2 class="tm-block-title d-inline-block">Edit Product</h2>
+              </div>
+            </div>
+            <div class="row tm-edit-product-row">
+              <div class="col-xl-12 col-lg-12 col-md-12">
+                <form action="{%url 'edit_product'%}" class="tm-edit-product-form" method="post" enctype="multipart/form-data">
+                  {%csrf_token%}
+                  <div class="form-group mb-3 ">
+                    <label
+                      for="name"
+                      >Product Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value="{{product.name}}"
+                      class="form-control validate"
+                      required
+                    />
+                  </div>
+                  <div class="form-group mb-3 ">
+                    <label
+                      for="description"
+                      >Description</label
+                    >
+                    <textarea
+                      class="form-control validate"
+                      rows="3"
+                      
+                      name="description"
+                    >{{product.description}}</textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label
+                      for="category"
+                      >Category</label
+                    >
+                    <select
+                      class="custom-select tm-select-accounts"
+                      id="category"
+                      name="category"
+                    >
+                      <option selected>{{product.category}}</option>
+                      {%for category in categorys%}
+                      <option value="{{category}}">{{category}} </option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label
+                      for="size"
+                      >Size</label
+                    >
+                    <select
+                      class="custom-select tm-select-accounts"
+                      id="size"
+                      name="size"
+                    >
+                      <option selected>{{product.size}}</option>
+                      {% for i in size %}
+                      <option value="{{i}}">{{i}}</option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label
+                      for="color"
+                      >Color</label
+                    >
+                    <select
+                      class="custom-select tm-select-accounts"
+                      id="color"
+                      name="color"
+                    >
+                      <option selected>{{product.color}}</option>
+                      {%for color in colors%}
+                      <option value="{{color}}">{{color}}</option>
+                      {%endfor%}
+                    </select>
+                  </div>
+                  <div class="row">
+                        <div class="form-group mb-3 col-xs-12 col-sm-6">
+                          <label
+                            for="stock"
+                            >Units In Stock
+                          </label>
+                          <input
+                            id="stock"
+                            name="stock"
+                            value="{{product.stock}}"
+                            type="text"
+                            class="form-control validate"                            
+                          />
+                        </div>
+                        <div class="form-group mb-3 col-xs-12 col-sm-6">
+                          <label
+                            for="price"
+                            >Price
+                          </label>
+                          <input
+                            id="price"
+                            name="price"
+                            type="text"
+                            value="{{product.price}}"
+                            class="form-control validate"
+                            required                            
+                          />
+                        </div>
+                        <div class="form-group mb-3 col-xs-12 col-sm-6">
+                          <label for="image">Product image1</label>                         
+                          <input required type="file"  name="image">
+                          <label for="image">Product image2</label> 
+                          <input required type="file"  name="image2">
+                          <label for="image">Product image3</label> 
+                          <input required type="file"  name="image3">
+                        </div>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase" value="{{product.id}}" name="product_id">Edit Product Now</button>
+                  </div>
+                </form>
+              </div>
+              
+              </div>
+              
+           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{%endblock%}

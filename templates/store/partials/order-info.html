@@ -1,0 +1,27 @@
+<!-- modal for order info -->
+
+<div class="modal fade" id="order_info_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 1750;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body">
+        <div class="card mb-3" style="max-width: 540px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="" class="img-fluid rounded-start" alt="..." id="order-info-img">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title" id="order-info-name">{{order.items.product.name}}</h5>
+                <p class="card-text" id="order-info-price">Price₹ {{order.items.product.price}}</p>
+                <p class="card-text" id="order-info-color">Color: {{order.items.product.color}}</p>
+                <p class="card-text" id="order-info-size">Size: {{order.items.product.size}}</p>
+                <p class="card-text" id="order-info-quantity">Quantity: {{order.items.quantity}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

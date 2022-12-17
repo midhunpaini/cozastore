@@ -1,0 +1,37 @@
+
+<div class="container"> 
+
+<table style="text-align: center;">
+    <thead>
+        <tr>
+            <th scope="col">PRODUCT NAME</th>
+            <th scope="col">USER</th>
+            <th scope="col">SELLING PRICE</th>
+            <th scope="col">QUANTITY</th>
+            <th scope="col">COST PRICE</th>
+            <th scope="col">PAYMENT METHOD</th>
+            <th scope="col">PROFIT</th>
+           
+        </tr>
+    </thead>
+    <tbody><b>
+        {% load mathfilters %}
+        {% for order in orderss %}
+        <tr >
+            <td>{{ order.items.product.name }}</td>       
+            <td>{{ order.customer.name|capfirst }}</td>
+            <td>{{ order.items.product.price }}</td>
+            <td>{{ order.items.quantity }}</td>
+            <td>{{ order.items.product.cost }}</td>
+            <td>{{ order.payment_method }}</td>
+            <td>{{ order.items.product.price|sub:order.items.product.cost|mul:order.items.quantity }}</td>
+        </tr>  
+        {% endfor %}
+        <h4>Total Profit = {{ profit }}</h4> 
+        <h4>No of product sold = {{ no_of_items }}</h4>
+    </tbody>
+    
+    <hr>
+</table>
+</div>
+

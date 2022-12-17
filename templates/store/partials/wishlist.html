@@ -1,0 +1,28 @@
+{%load static%}
+<div><h2 class="m-5">Wishlist</h2></div>
+{% for list in wishlist %}
+<div class="card m-3 mx-auto" style="max-width: 640px;" id="wishlist_card{{list.product.id}}">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ list.product.imageURL }}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title"><h5 class="card-title">{{ list.product.name }}</h5></h5>
+          <h5 class="card-text">Price: ₹{{ list.product.price }}</h5>
+          <p class="card-text">Added On: {{ list.wish_date }}</p>
+          <p class="card-text">Color: {{ list.product.color }}</p>
+          <p class="card-text">Size: {{ list.product.size }}</p>
+        </div>
+        <input type="text" value="{{ list.product.name }}" hidden>
+        <button class="btn btn-success btn-lg mt-5 ms-5 add_from_wishlist" pid="{{ list.product.id }}">Add to Cart</button>
+        <button class="btn btn-danger btn-lg mt-5 remove_from_wishlist" pid="{{ list.product.id }}">Remove</button>
+        {%csrf_token%}
+    </div>
+    </div>
+  </div> 
+{% endfor %}
+{% if not wishlist %}
+<img src="{% static 'store/images/icons/empty_wishlist.png' %}" alt="" id="empty_wish_pic">
+
+{%endif%}

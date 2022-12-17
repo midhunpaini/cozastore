@@ -1,0 +1,44 @@
+
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+        <div class="container mt-5">
+          <div class="row tm-content-row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+              <div class="tm-bg-primary-dark tm-block tm-block-products">
+                <div class="tm-product-table-container">
+                  <table class="table table-hover tm-table-small tm-product-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col"> NAME</th>
+                        <th scope="col">EMAIL</th>
+                        <th scope="col">MOBILE</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col">&nbsp;</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <form action="{% url 'accounts' %}" method="POST">{% csrf_token %} 
+                      {%for user in users%}
+                      <tr>
+                        <th scope="row"></th>
+                        <td class="tm-product-name">{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.mobile}}</td>
+                        {% if  user.active %}<td> <button class="btn btn-danger btn-block text-uppercase" value="{{user.id}}" type="submit" name="user_id"> Block </button> </td> 
+                        {% else %}<td> <button class="btn btn-success btn-block text-uppercase" value="{{user.id}}" type="submit" name="user_id"> Unblock </button> </td>
+                        {% endif %} 
+                      {%endfor%}
+                    </form> 
+                    </tbody>
+                  </table>
+                </div>         
+              </div>   
+            </div>     
+          </div>        
+        </div>        
+{%endblock%}    

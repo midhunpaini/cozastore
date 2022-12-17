@@ -1,0 +1,94 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login & Registration Form</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="{%static 'store/css/signin.css'%}">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- CSS only -->
+
+</head>
+<body>
+  <div class="cont" style="z-index: 1;">
+    <a href="{% url 'home' %}"><img src="{%static 'store/images/close.png'%}" alt="home" style="width: 20px; margin: 10px; position: absolute; z-index: 10; margin-left: 850px;"></a>
+    
+    <div class="form sign-in">
+      <h2>Sign In</h2>
+    
+      <form id="otp_form">
+        {%csrf_token%}
+      <label>
+        <span>Mobile</span>
+        <input type="text" name="phone" id="mobile" required value="{{mobile}}">  
+      </label>
+      <div id="otpinput" hidden>
+        <label>
+          <span>otp</span>
+          <input type="text" name="otp" id="otp">
+        </label>
+      </div>
+      <p style="color: red; text-align:center;" id="errorotp" ></p>
+      <button class="submit" type="button" id="send_otp_btn">Send OTP</button>
+      <button class="submit" type="submit" id="signin_btn" style="display: none;" >Sign In</button>
+      </form>
+      <a href="{% url 'signin' %}"><button class="submit" type="submit">Signin With Password</button></a>
+    </div>
+   
+      
+  
+    <div class="sub-cont">
+      <div class="img">
+        <div class="img-text m-up">
+          <h1>New here?</h1>
+          <p>sign up and discover</p>
+        </div>
+        <div class="img-text m-in">
+          <h1>One of us?</h1>
+          <p>just sign in</p>
+        </div>
+        <div class="img-btn">
+          <span class="m-up">Sign Up</span>
+          <span class="m-in">Sign In</span>
+        </div>
+      </div>
+      <div class="form sign-up" style="padding-top:1px; padding-bottom: 1px;">
+        
+        <form  class="register">
+          {%csrf_token%} 
+        <h2>Sign Up</h2>
+        <label>
+          <span>Name</span>
+          <input type="text" class="name" name="name" required value="{{values.name}}">
+          
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" class="email" name="email" required value="{{values.email}}">
+        </label>
+        <label>
+          <span>Mobile</span>
+          <input type="text" class="mobile" name="mobile" required value="{{values.mobile}}">
+          
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" class="pass" name="password" required >
+          
+        </label>
+        <label>
+          <span>Confirm Password</span>
+          <input type="password" class="conf_pass" name="conf_password" required>    
+              <p style="color: red;" id="error"></p>       
+          </label>
+        <button type="submit" class="submit" >Sign Up Now</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="{%static 'store/js/signin.js'%}"></script>
+</body>
+</html>

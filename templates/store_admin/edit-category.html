@@ -1,0 +1,105 @@
+{%extends 'store_admin/admin_base.html'%}
+{%load static%}
+{%block content%}
+    <div class="container mt-5">
+      <div class="row tm-content-row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+              <h3 style="margin-left: 20px;"><strong style="color: white;">Category</strong></h3>
+              <table class="table table-hover tm-table-small tm-product-table">
+                <thead>
+                  <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">NAME</th>
+                    
+                    <th scope="col">OFFER</th>
+                    <th scope="col"></th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>               
+                    {%for category in filters.categories%} 
+                    <form action="{% url 'edit_category' %}" method="post">{% csrf_token %}
+                  <tr>
+                    <th scope="row"></th>
+                    <td class="tm-product-name">{{category.id}}</td>
+                    <td class="tm-product-name"><input id="name" name="name" type="text" value="{{category.name}}" class="form-control validate"/></td>
+                    <td class="tm-product-name"><input id="name" name="offer" type="text" value="{{category.offer}}" class="form-control validate"/></td>
+                     <td> <button class="btn btn-primary btn-block text-uppercase" type="submit" name="edit" value="{{category.id}}"> Edit</button></td></form>      
+                    <form action="{% url 'edit_category' %}" method="post">{% csrf_token %}<td> <button class="btn btn-danger btn-block text-uppercase" type="submit" name="delete" value="{{category.id}}"> Delete</button></td> </form> 
+                  </tr>
+                    {%endfor%}
+                </tbody>
+              </table>
+            </div>     
+          </div>
+          <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+              <h3 style="margin-left: 20px;"><strong style="color: white;">Color</strong></h3>
+              <table class="table table-hover tm-table-small tm-product-table">
+                <thead>
+                  <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Value</th>
+                    
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>                   
+                    {%for color in filters.colors%}
+                    <form action="{% url 'edit_color' %}" method="post">{% csrf_token %}
+                  <tr>
+                    <th scope="row"></th>
+                    <td class="tm-product-name">{{color.id}}</td>
+                    <td class="tm-product-name"><input id="name" name="value" type="text" value="{{color.value}}" class="form-control validate"/></td>
+                    <td></td>
+                    <td> <button class="btn btn-primary btn-block text-uppercase" type="submit" name="edit" value="{{color.id}}"> Edit</button></td></form>      
+                    <form action="{% url 'edit_color' %}" method="post">{% csrf_token %}<td> <button class="btn btn-danger btn-block text-uppercase" type="submit" name="delete" value="{{color.id}}"> Delete</button></td></form> 
+                  </tr>
+                    {%endfor%} 
+                </tbody>
+              </table>
+            </div>     
+          </div> 
+          <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+              <h3 style="margin-left: 20px;"><strong style="color: white;">Size</strong></h3>
+              <table class="table table-hover tm-table-small tm-product-table">
+                <thead>
+                  <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Value</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {%for size in filters.size%}
+                    <form action="{% url 'edit_size' %}" method="post">{% csrf_token %}
+                  <tr>
+                    <th scope="row"></th>
+                    <td class="tm-product-name">{{size.id}}</td>
+                    <td class="tm-product-name"><input id="name" name="value" type="text" value="{{size.value}}" class="form-control validate"/></td>
+                    <td></td>
+                    <td> <button class="btn btn-primary btn-block text-uppercase" type="submit" name="edit" value="{{size.id}}"> Edit</button></td></form>      
+                    <form action="{% url 'edit_size' %}" method="post">{% csrf_token %}<td> <button class="btn btn-danger btn-block text-uppercase" type="submit" name="delete" value="{{size.id}}"> Delete</button></td></form> 
+                  </tr>
+                    {%endfor%}
+                  
+                </tbody>
+              </table>
+            </div>     
+          </div>
+        </div>     
+      </div>        
+    </div>        
+  </div>          
+</div>
+{%endblock%}

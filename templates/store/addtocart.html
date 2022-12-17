@@ -1,0 +1,255 @@
+{%load static%}
+{%load cart%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Home</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{%static 'store/images/icons/favicon.png'%}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/bootstrap/css/bootstrap.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/fonts/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/fonts/iconic/css/material-design-iconic-font.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/fonts/linearicons-v1.0.0/icon-font.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/animate/animate.css'%}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/css-hamburgers/hamburgers.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/animsition/css/animsition.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/select2/select2.min.css'%}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/daterangepicker/daterangepicker.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/slick/slick.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/MagnificPopup/magnific-popup.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/vendor/perfect-scrollbar/perfect-scrollbar.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'store/css/util.css'%}">
+	<link rel="stylesheet" type="text/css" href="{%static 'store/css/main.css'%}">
+	
+<!--===============================================================================================-->
+</head>
+<body class="animsition">
+	
+
+
+	
+	
+		
+
+		<div class="container">
+            
+			<div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+				
+
+				<div class="row">
+					<div class="col-md-6 col-lg-7 p-b-30">
+						<div class="p-l-25 p-r-30 p-lr-0-lg">
+							<div class="wrap-slick3 flex-sb flex-w">
+								<div class="wrap-slick3-dots"></div>
+								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+
+								<div class="slick3 gallery-lb">
+									<div class="item-slick3" data-thumb="{{mproduct.imageURL}}">
+										<div class="wrap-pic-w pos-relative">
+											<img src="{{mproduct.imageURL}}" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{mproduct.imageURL}}">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="item-slick3" data-thumb="{{mproduct.imageURL}}">
+										<div class="wrap-pic-w pos-relative">
+											<img src="{{mproduct.imageURL}}" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{mproduct.imageURL}}">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="item-slick3" data-thumb="{{mproduct.imageURL}}">
+										<div class="wrap-pic-w pos-relative">
+											<img src="{{mproduct.imageURL}}" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{mproduct.imageURL}}">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-6 col-lg-5 p-b-30">
+						<div class="p-r-50 p-t-5 p-lr-0-lg">
+							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
+								{{mproduct.name}}
+							</h4>
+
+							<span class="mtext-106 cl2">
+								₹ {{mproduct.price}}
+							</span>
+
+							<p class="stext-102 cl3 p-t-23">
+								{{mproduct.description}}
+							</p>
+							
+							<!--  -->
+                            <form action="{% url 'cart'%}" method="post">
+								{% csrf_token%}
+								<input hidden name="id" value="{{mproduct.id}}">
+							<div class="p-t-33">
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Size
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2" name="size">
+												<option>Choose an option</option>
+												<option>{{mproduct.size}}</option>
+												
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Color
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2" name="color">
+												<option>Choose an option</option>
+												<option>{{mproduct.color}}</option>
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-204 flex-w flex-m respon6-next">
+										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
+											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-minus"></i>
+											</div>
+											{% if request.session.cart %}
+												{% if mproduct|is_in_cart:request.session.cart%}
+												<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="{{mproduct|cart_quantity:request.session.cart}}">
+												{% else %}
+												<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+												{% endif %}
+												{% else %}
+											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+											{% endif %}
+											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-plus"></i>
+											</div>
+										</div>
+	
+										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											Add to cart
+										</button>
+									</div>
+								</div>	
+							</div>
+                            </form>
+
+							<!--  -->
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+<!--===============================================================================================-->	
+	<script src="{%static 'store/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/animsition/js/animsition.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/bootstrap/js/popper.js'%}"></script>
+	<script src="{%static 'store/vendor/bootstrap/js/bootstrap.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/select2/select2.min.js'%}"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/daterangepicker/moment.min.js'%}"></script>
+	<script src="{%static 'store/vendor/daterangepicker/daterangepicker.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/slick/slick.min.js'%}"></script>
+	<script src="{%static 'store/js/slick-custom.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/parallax100/parallax100.js'%}"></script>
+	<script>
+        $('.parallax100').parallax100();
+	</script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/MagnificPopup/jquery.magnific-popup.min.js'%}"></script>
+	<script>
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/isotope/isotope.pkgd.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/sweetalert/sweetalert.min.js'%}"></script>
+	<script>
+		$('.js-addwish-b2').on('click', function(e){
+			e.preventDefault();
+		});
+
+		
+		
+		/*---------------------------------------------*/
+
+		$('.js-addcart-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to cart !", "success");
+			});
+		});
+	
+	</script>
+<!--===============================================================================================-->
+	<script src="{%static 'store/vendor/perfect-scrollbar/perfect-scrollbar.min.js'%}"></script>
+
+<!--===============================================================================================-->
+	<script src="{%static 'store/js/main.js'%}"></script>
+
+</body>
+</html>

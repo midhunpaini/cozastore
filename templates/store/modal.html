@@ -1,0 +1,141 @@
+{% load static%}
+{% load cart%}
+<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
+    <form id="add_to_cart">
+    {%csrf_token%}
+    <div class="overlay-modal1 js-hide-modal1"></div>
+
+    <div class="container">
+        <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+            <button class="how-pos3 hov3 trans-04 js-hide-modal1">
+                <img  src="{% static 'store/images/icons/icon-close.png' %}"  alt="CLOSE">
+            </button>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-7 p-b-30">
+                    <div class="p-l-25 p-r-30 p-lr-0-lg">
+                        <div class="wrap-slick3 flex-sb flex-w">
+                            <div class="wrap-slick3-dots"></div>
+                            <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+
+                            <div class="slick3 gallery-lb">
+                                <div class="item-slick3" data-thumb="" >
+               
+                                    <div class="wrap-pic-w pos-relative "  >
+                                        <div id="modal_img">
+                                            <img src="" alt="IMG-PRODUCT" name="product_img" >
+                                        </div>
+                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="" name="product_img">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="item-slick3" data-thumb="">
+                                    <div class="wrap-pic-w pos-relative">
+                                        <img src="" alt="IMG-PRODUCT" name="product_img">
+
+                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="" name="product_img">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="item-slick3" data-thumb="">
+                                    <div class="wrap-pic-w pos-relative">
+                                        <img src="" alt="IMG-PRODUCT" name="product_img">
+
+                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{mproduct.imageURL}}" name="product_img">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-5 p-b-30" id="modal_content">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14" id="product_name">
+                      
+                        </h4>
+
+                        <span class="mtext-106 cl2" id="product_price">
+                            
+                        </span>
+
+                        <p class="stext-102 cl3 p-t-23 " id="product_description">
+                            
+                        </p>
+                        
+                        <!--  -->
+                        
+                            {%csrf_token%}
+                            <div class="p-t-33">
+                                <div class="flex-w flex-r-m p-b-10">
+                                    <div class="size-203 flex-c-m respon6">
+                                        Size
+                                    </div>
+
+                                    <div class="size-204 respon6-next">
+                                        <div class="rs1-select2 bor8 bg0">
+                                            <select class="js-select2" name="size">
+                                                <option>Choose an option</option>
+                                                <option id="product_size" ></option>
+                                                
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex-w flex-r-m p-b-10">
+                                    <div class="size-203 flex-c-m respon6">
+                                        Color
+                                    </div>
+
+                                    <div class="size-204 respon6-next">
+                                        <div class="rs1-select2 bor8 bg0">
+                                            <select class="js-select2" name="color">
+                                                <option>Choose an option</option>
+                                                <option id="product_color"></option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex-w flex-r-m p-b-10">
+									<div class="size-204 flex-w flex-m respon6-next">
+										<div class="wrap-num-product flex-w m-r-20 m-tb-10" hidden>
+											<div class="btn-num-product-down2 cl8 hov-btn3 trans-04 flex-c-m" >
+												<i class="fs-16 zmdi zmdi-minus"></i>
+											</div>
+
+											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1" id="cart_count">
+                                           
+											<div class="btn-num-product-up2 cl8 hov-btn3 trans-04 flex-c-m">
+                                                <input type="text" value="" id="product_id" hidden>
+												<i class="fs-16 zmdi zmdi-plus"></i>
+											</div>
+										</div>
+                                        
+										<button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" id="add_cart_button">
+											Add to cart
+										</button>
+                                        <input type="text" value="" id="product_id2" hidden>
+                                        <input type="text" value="" id="product_name2" hidden>
+                                        <input type="text" value="" id="cartitemcount" hidden>
+									</div>
+								</div>		
+                            </div>
+                        
+                        <!--  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>

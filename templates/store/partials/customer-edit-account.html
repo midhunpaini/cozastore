@@ -1,0 +1,32 @@
+
+
+<div class="row m-5">
+    <div class="col-6 border border-secondary rounded m-2">
+        <div><h3>Edit Account</h3></div>
+        <form class="row g-3" id="edit_acc_detail">
+            {%csrf_token%}
+            <div class="col-12">
+                <label for="profile_edit_name" class="form-label" required>Name</label>
+                <input type="text" class="form-control" id="profile_edit_name" value="{{user.name}}">
+            </div>
+            <div class="col-12">
+                <label for="profile_edit_mobile" class="form-label" required>Mobile</label>
+                <input type="text" class="form-control" id="profile_edit_mobile" value="{{user.mobile}}">
+            </div>
+            <div class="col-12">
+                <label for="profile_edit_email" class="form-label" required>Email</label>
+                <input type="email" class="form-control" id="profile_edit_email" value="{{user.email}}">
+            </div>
+            <div class="col-12">
+                <label for="edit_profile_pass" class="form-label" required>Current Password</label>
+                <input type="password" class="form-control" id="edit_profile_pass">
+            </div>
+            <p class="alert" id="edit_error"></p>
+            <div class="col-12">
+            <button type="submit" class="btn btn-primary mb-2">Confirm</button>
+            </div>
+        </form>    
+    </div>
+    
+</div>
+    
