@@ -476,7 +476,7 @@ def delete_product(request):
 def add_product(request):
     categorys = Category.objects.all()
     colors = Color.objects.all()
-    size = Size.objects.all()
+    sizes = Size.objects.all()
     if request.method == 'POST':
         try:
             name = request.POST.get('name')
@@ -513,9 +513,10 @@ def add_product(request):
             image2 = image2,
             image3 = image3)
         new_product.save()
-        return redirect('product')
+        return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes})
 
-    return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'size':size})
+    return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes})
+
 
 def get_product(request):  
     products = Products.objects.all()
