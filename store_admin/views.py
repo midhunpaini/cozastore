@@ -118,7 +118,7 @@ def admin_signin(request):
 
     login(request, user)
 
-    return redirect('dashboard')
+    return render(request, 'store_admin/index.html')
 
 def signout(request):
     logout(request)
