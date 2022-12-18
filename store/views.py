@@ -204,7 +204,7 @@ def otp_login(request):
             Exception
         return JsonResponse({'sucess':True,'message':message})
             
-    return render (request, 'store/signin2.html',{'user':user})
+    
 
 def verify_otp(request):
     if request.method=='POST':

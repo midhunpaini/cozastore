@@ -1,0 +1,92 @@
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 3000;">
+    <div class="modal-dialog">
+      <div class="modal-content bg-opacity-25">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login/Register</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id = 'register_form'>
+            <form  id="register">
+              {%csrf_token%} 
+              <div class="col-12">
+                <label for="name" class="form-label" required>Name</label>
+                <input type="text" class="form-control" id="name" >
+              </div>
+              <div class="col-12">
+                <label for="mobile" class="form-label" required>Mobile</label>
+                <input type="text" class="form-control" id="mobile">
+              </div>
+              <div class="col-12">
+                <label for="email" class="form-label" required>Email</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+              <div class="col-12">
+                <label for="pass" class="form-label" required>Password</label>
+                <input type="password" class="form-control" id="pass">
+              </div>
+              <div class="col-12">
+                <label for="conf_pass" class="form-label" required>Confirm Password</label>
+                <input type="password" class="form-control" id="conf_pass">
+              </div>
+              <p style="color: red;" id="error"></p>
+              <p class="text-center text-muted">Have already an account? <a id="login_id" href="#!"
+                class="fw-bold text-body"><u>Login here</u></a></p>
+              <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mb-2">Confirm</button>
+              </div>
+            </form>
+          </div>
+        
+          <!-- email login -->
+            <div id="email_login" style="display: none;">
+              <form id="signin_form">
+                {%csrf_token%}
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="email_email" placeholder="name@example.com">
+                  <label for="email_login">Email address</label>
+                </div>
+                <div class="form-floating">
+                  <input type="password" class="form-control" id="password" placeholder="Password">
+                  <label for="Password">Password</label>
+                </div>
+                <p style="color: red;" id="errormessage"></p>
+                <div>
+                  <button class="btn btn-primary mt-3 ms-5" type="submit">Login</button>
+                  <button class="btn btn-primary mt-3 ms-3" id="login_otp_btn" type="button">Login with Otp</button>
+                  <button class="btn btn-primary mt-3 ms-3 register_btn"type="button">Register</button>
+                </div>
+              </form>
+            </div>
+          
+          
+          <!------------------------------------>
+
+          <!-- otp login -->
+          <div id="otp_login" style="display: none;">
+            <form id="otp_form">
+              {%csrf_token%}
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="login_mobile" placeholder="888888888">
+                <label for="login_mobile">Mobile Number</label>
+              </div>
+              <div class="form-floating" id="otpinput"  style="display: none;">
+                <input type="password" class="form-control" placeholder="otp">
+                <label for="otp">Otp</label>
+              </div>
+              <p style="color: red;" id="errorotp"></p>
+              <button class="btn btn-primary mt-3 ms-5" id="" type="submit" style="display: none;">Submit Otp</button>
+              <button class="btn btn-primary mt-3 ms-5" type="button" id="send_otp_btn">Send Otp</button>
+              <button class="btn btn-primary mt-3 ms-3 register_btn"type="button">Register</button>
+            </form>
+          </div>
+         
+          <!-------------------------------------->
+        </div>
+      </div>
+    </div>
+  </div>
