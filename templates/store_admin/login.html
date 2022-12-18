@@ -61,7 +61,7 @@
             </div>
             <div class="row mt-2">
               <div class="col-12">
-                <form action="{% url 'admin_signin' %}" method="post" class="tm-login-form">
+                <form action="{% url 'admin_signin' %}" method="POST" class="tm-login-form">
                   {% csrf_token %}
                   <div class="form-group">
                     <label for="username">Username</label>
