@@ -118,7 +118,7 @@ def admin_signin(request):
 
     login(request, user)
 
-    return render(request, 'store_admin/index.html')
+    return HttpResponse('testing')
 
 def signout(request):
     logout(request)
