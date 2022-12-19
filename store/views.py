@@ -105,7 +105,8 @@ def signup(request):
         mobile = request.POST.get('mobile')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        conf_password=request.POST.get('conf_pass')    
+        conf_password=request.POST.get('conf_pass')   
+        print(email) 
 
         error_message = None
         
@@ -138,15 +139,14 @@ def signup(request):
             return JsonResponse({'sucess':True})
         else:
             
-            return render(request,'store/signin.html',)
+            return render(request,'store/home.html',)
 
-    return render(request, 'store/signin.html')
+    return render(request, 'store/home.html')
     
 
 def signin(request):
-    
     if request.method != 'POST':
-        return render(request, 'store/signin.html')
+        return render(request, 'store/home.html')
     email = request.POST['email']
     password = request.POST['password']
 
@@ -170,12 +170,11 @@ def signin(request):
     else:
         message =  "Enter a valid password!"
         return JsonResponse({'sucess':True,'message':message})
-    return render(request, 'store/signin.html')
+    return render(request, 'store/home.html')
 
 
 
 def user_logout(request):
-
     user_cart(request)
     request.session.flush()
     return render(request, 'store/home.html')
@@ -202,9 +201,9 @@ def otp_login(request):
                 
         except:
             Exception
-        return JsonResponse({'sucess':True,'message':message})
+        return JsonResponse({'sucess':True})
             
-    
+   
 
 def verify_otp(request):
     if request.method=='POST':
@@ -488,6 +487,7 @@ def add_product(request):
             size = Size.objects.get(value=size)
             description = request.POST.get('description')
             stock = request.POST.get('stock')
+            cost = request.POST.get('cost')
             price = request.POST.get('price')
             image = request.FILES.get('image')
             image2 = request.FILES.get('image2')
@@ -508,6 +508,7 @@ def add_product(request):
             description=description,
             stock=stock, 
             price = fprice,
+            cost = cost,
             date_entry=date,
             image=image,
             image2 = image2,
@@ -517,8 +518,7 @@ def add_product(request):
 
     return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes})
 
-
-def get_product(request):  
+def get_product(request):   
     products = Products.objects.all()
     if request.method == 'POST':
         categorys = Category.objects.all()

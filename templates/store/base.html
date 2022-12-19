@@ -60,7 +60,6 @@
 								{{customer_name}}
 							</a>
 							<ul class="dropdown-menu">
-							  <!-- <li><a class="dropdown-item" href="#">Orders</a></li> -->
 							  <li><a class="dropdown-item" href="{% url 'profile' %}">Profie</a></li>
 							  <li><a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a></li>
 							</ul>
@@ -168,11 +167,25 @@
 				</li>
 
 				<li>
-					<div class="right-top-bar flex-w h-full">	
-						<a href="{% url 'signin' %}" class="flex-c-m p-lr-10 trans-04">
-							My Account
+					{%if customer_name%}
+					<div class="right-top-bar flex-w h-full" style="margin-right: -20px; z-index: 1200;">
+						<div class="dropdown">
+							<a class="btn btn-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: 0;">
+								{{customer_name}}
+							</a>
+							<ul class="dropdown-menu">
+							  <li><a class="dropdown-item" href="{% url 'profile' %}">Profie</a></li>
+							  <li><a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a></li>
+							</ul>
+						  </div>
+					</div>
+					{%else%}
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m trans-04 p-lr-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							Login
 						</a>
 					</div>
+					{%endif%}
 				</li>
 			</ul>
 
