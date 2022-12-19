@@ -28,29 +28,40 @@ def dashboard(request):
     m = []
     for month in range(12):
         m.append(Order.objects.filter(order_date__month = month+1, payment_status='success').count()) 
-    print(m[11],'asdfasdf') 
  
-
+    
     sales_today = 0
     for product in products_today:
-        price = int(product.items.product.price)
-        quantity = int(product.items.quantity)
+        try:
+            price = int(product.items.product.price)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
         t_price = price*quantity
         sales_today+=t_price
+        print(t_price,'*************************************************')
      
-    
     total_sales = 0
     for product in orders:
-        price = int(product.items.product.price)
-        quantity = int(product.items.quantity)
+        try:
+            price = int(product.items.product.price)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
         t_price = price*quantity
         total_sales+=t_price
     
     total_proft = 0
     no_of_items = 0
     for product in orders:
-        price = int(product.items.product.price)-int(product.items.product.cost)
-        quantity = int(product.items.quantity)
+        try:
+            price = int(product.items.product.price)-int(product.items.product.cost)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
         profit = price*quantity
         total_proft+=profit
         no_of_items+=quantity
@@ -59,8 +70,12 @@ def dashboard(request):
     profit_today = 0
     no_of_items = 0
     for product in products_today:
-        price = int(product.items.product.price)-int(product.items.product.cost)
-        quantity = int(product.items.quantity)
+        try:
+            price = int(product.items.product.price)-int(product.items.product.cost)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
         profit = price*quantity
         profit_today+=profit
         no_of_items+=quantity
@@ -97,7 +112,7 @@ def dashboard(request):
     }
 
     return render(request, 'store_admin/index.html',context)
-  
+
 def get_data(request):
     data ={
         'sales':100,
