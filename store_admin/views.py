@@ -38,69 +38,66 @@ def dashboard(request):
         t_price = price*quantity
         sales_today+=t_price
      
-    try:
-        total_sales = 0
-        for product in orders:
-            price = int(product.items.product.price)
-            quantity = int(product.items.quantity)
-            t_price = price*quantity
-            total_sales+=t_price
+    
+    total_sales = 0
+    for product in orders:
+        price = int(product.items.product.price)
+        quantity = int(product.items.quantity)
+        t_price = price*quantity
+        total_sales+=t_price
+    
+    total_proft = 0
+    no_of_items = 0
+    for product in orders:
+        price = int(product.items.product.price)-int(product.items.product.cost)
+        quantity = int(product.items.quantity)
+        profit = price*quantity
+        total_proft+=profit
+        no_of_items+=quantity
+    
+    
+    profit_today = 0
+    no_of_items = 0
+    for product in products_today:
+        price = int(product.items.product.price)-int(product.items.product.cost)
+        quantity = int(product.items.quantity)
+        profit = price*quantity
+        profit_today+=profit
+        no_of_items+=quantity
         
-        total_proft = 0
-        no_of_items = 0
-        for product in orders:
-            price = int(product.items.product.price)-int(product.items.product.cost)
-            quantity = int(product.items.quantity)
-            profit = price*quantity
-            total_proft+=profit
-            no_of_items+=quantity
         
         
-        profit_today = 0
-        no_of_items = 0
-        for product in products_today:
-            price = int(product.items.product.price)-int(product.items.product.cost)
-            quantity = int(product.items.quantity)
-            profit = price*quantity
-            profit_today+=profit
-            no_of_items+=quantity
-            
-            
-            
-            
+        
 
-        context = {
-            'orders':orders,
-            'cod':cod,
-            'paypal':paypal,
-            'razorpay':razorpay,
-            'returned': returned,
-            'pending': pending,
-            'delivered': delivered,
-            'canceled': canceled,
-            'sales_today':sales_today,
-            'total_sales': total_sales,
-            'total_profit':total_proft,
-            'profit_today':profit_today,
-            'jan': m[0],
-            'feb': m[1],
-            'mar' : m[2],
-            'april':m[3],
-            'may':m[4],
-            'june':m[5],
-            'july':m[6],
-            'aug':m[7],
-            'sept':m[8],
-            'oct':m[9],
-            'nov':m[10],
-            'dec':m[11],
-        }
+    context = {
+        'orders':orders,
+        'cod':cod,
+        'paypal':paypal,
+        'razorpay':razorpay,
+        'returned': returned,
+        'pending': pending,
+        'delivered': delivered,
+        'canceled': canceled,
+        'sales_today':sales_today,
+        'total_sales': total_sales,
+        'total_profit':total_proft,
+        'profit_today':profit_today,
+        'jan': m[0],
+        'feb': m[1],
+        'mar' : m[2],
+        'april':m[3],
+        'may':m[4],
+        'june':m[5],
+        'july':m[6],
+        'aug':m[7],
+        'sept':m[8],
+        'oct':m[9],
+        'nov':m[10],
+        'dec':m[11],
+    }
 
-        return render(request, 'store_admin/index.html',context)
-    except:
-        AttributeError
-        return render(request, 'store_admin/index.html')
-
+    return render(request, 'store_admin/index.html',context)
+  
 def get_data(request):
     data ={
         'sales':100,
