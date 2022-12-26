@@ -71,17 +71,19 @@
             <form id="otp_form">
               {%csrf_token%}
               <div class="form-floating mb-3">
-                <label for="login_mobile">Mobile Number</label>
                 <input type="text" class="form-control" id="login_mobile" placeholder="888888888">
+                <label for="login_mobile">Mobile Number</label>
               </div>
               <div class="form-floating" id="otpinput"  style="display: none;">
                 <input type="password" id="otp" class="form-control" placeholder="otp">
                 <label for="otp">Otp</label>
               </div>
               <p style="color: red;" id="errorotp"></p>
-              <button class="btn btn-primary mt-3 ms-5" id="submit_otp" type="submit" style="display: none;">Submit Otp</button>
-              <button class="btn btn-primary mt-3 ms-5" type="button" id="send_otp_btn">Send Otp</button>
-              <button class="btn btn-primary mt-3 ms-3 register_btn"type="button">Register</button>
+              <div class="d-inline">
+                <button class="btn btn-primary mt-3 ms-5" id="submit_otp" type="submit" style="display: none;">Submit Otp</button>
+                <button class="btn btn-primary mt-3 ms-5" type="button" id="send_otp_btn">Send Otp</button>
+                <button class="btn btn-primary mt-3 ms-3 register_btn"type="button">Register</button>
+              </div>
             </form>
           </div>
          
