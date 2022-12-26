@@ -726,15 +726,9 @@ def modify_cart(request):
 def check_cart(request):
     if user_logged(request):
         user = customer(request)
-        c = Cart.objects.filter(customer=user)
-        cart = {}
-        for p in c:
-            cart[p.product.id] = p.quantity
-    else:
-        if 'cart' in request.session:
-            cart = request.session['cart']
-
-    if cart == None:
+        c = Cart.objects.filter(customer=user).exists()
+        
+    if c:
         cart_items = 0
     else:
         cart_items = 1
