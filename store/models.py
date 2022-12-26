@@ -109,7 +109,7 @@ class ProductVariation(models.Model):
     @staticmethod   
     def get_all_product_by_color(color_id):
         if color_id:
-            variations = ProductVariation.objects.filter(color = color_id)
+            variations = ProductVariation.objects.filter(color = color_id).distinct('product')
             products = []
             for product in variations:
                 products.append(product.product)

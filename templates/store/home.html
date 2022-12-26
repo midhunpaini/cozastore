@@ -302,12 +302,12 @@
 							</div>
 
 							<ul>
-								{% for color in colors %}
 								<li class="p-b-6">
 									<a href="/?all_product=True" class="filter-link stext-106 trans-04 filter-link-active">
 										All
 									</a>
 								</li>
+								{% for color in colors %}
 									<li class="p-b-6">
 										<span class="fs-15 lh-12 m-r-6" style="color:{{ color.value }};">
 											<i class="zmdi zmdi-circle"></i>
