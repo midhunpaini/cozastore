@@ -451,26 +451,23 @@ def add_product(request):
     colors = Color.objects.all()
     sizes = Size.objects.all()
     if request.method == 'POST':
-        try:
-            sizess = request.POST.getlist('size')
-            colorss = request.POST.getlist('color')
-            name = request.POST.get('name')
-            category = request.POST.get('category')
-            category = Category.objects.get(name=category)
-            description = request.POST.get('description')
-            stock = int(request.POST.get('stock'))
-            print(stock, 'asdfsadfaasdfas')
-            cost = int(request.POST.get('cost'))
-            price = int(request.POST.get('price'))
-            image = request.FILES.get('image')
-            image2 = request.FILES.get('image2')
-            image3 = request.FILES.get('image3')
-            fprice = float(price)
 
-        except Exception:
-            print('sapasapagnaasdnasd')
-            # color.DoesNotExist
-            # size.DoesNotExist
+        sizess = request.POST.getlist('size')
+        colorss = request.POST.getlist('color')
+        name = request.POST.get('name')
+        category = request.POST.get('category')
+        category = Category.objects.get(name=category)
+        description = request.POST.get('description')
+        stock = int(request.POST.get('stock'))
+        print(stock, 'asdfsadfaasdfas')
+        cost = int(request.POST.get('cost'))
+        price = int(request.POST.get('price'))
+        image = request.FILES.get('image')
+        image2 = request.FILES.get('image2')
+        image3 = request.FILES.get('image3')
+        fprice = float(price)
+
+            
         message = None
         if stock < 0:
             message = "Enter A valid Stock"
@@ -484,7 +481,6 @@ def add_product(request):
                 Image.open(image)
                 Image.open(image2)
                 Image.open(image3)
-                print('vaseegara ')
                 new_product = Products.objects.create(
                     name=name,
                     category=category,
@@ -495,7 +491,6 @@ def add_product(request):
                     image=image,
                     image2=image2,
                     image3=image3)
-
                 l = len(sizess)
                 m = len(colorss)
                 print('product created')
