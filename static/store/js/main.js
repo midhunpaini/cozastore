@@ -543,7 +543,7 @@
                         "image": "https://example.com/your_logo",
                         "order_id": id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                         "handler": function (response){
-                            console.log('you are at razorpay success')
+                        
                             $.ajax({
                                 url: '/razorpay_success',
                                 type: "GET",
@@ -562,9 +562,6 @@
                                     
                                 },
                             });
-                            alert(response.razorpay_payment_id);
-                            alert(response.razorpay_order_id);
-                            alert(response.razorpay_signature)
                         },
                         
                     };
