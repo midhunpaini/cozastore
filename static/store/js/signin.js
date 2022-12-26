@@ -49,7 +49,6 @@ $('#send_otp_btn').on('click',function(e){
 			console.log(data)
 			
 			if(data.message==undefined){
-				console.log('you are herer')
 				document.getElementById('otpinput').style.display = 'block';
 				document.getElementById('send_otp_btn').style.display = 'none';
 				document.getElementById('submit_otp').style.display = 'block';
