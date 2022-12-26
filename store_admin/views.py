@@ -215,6 +215,7 @@ def edit_filters(request):
     return render(request, 'store_admin/edit-category2.html',{'filters':filters})
 
 def edit_category(request):
+    print('errortesrtasojfiashfdiahfdiahh')
     if request.method=='POST':
         id = request.POST.get('edit')
         if id != None:
@@ -354,8 +355,8 @@ def customer_order(request,oid):
             return render(request, 'store_admin/customer_order.html',context)
 
 def report(request):
-    from_date = datetime.now().date()
-    to_date = datetime.now().date() + timedelta(days=1)
+    from_date = datetime.now().date().isoformat()
+    to_date = (datetime.now().date() + timedelta(days=1)).isoformat()
     orders = Order.objects.filter(payment_status='success').order_by('-order_date')
     context = {
         'orderss':orders,
@@ -383,25 +384,24 @@ def daily_report(request):
 
 def monthly_report(request,month):
     orders = Order.objects.filter(order_date__month = month, payment_status='success').order_by('-order_date')
-    from_date = '01'+month+'2022'
-    to_date = '30'+month+'2022'
+    from_date = '2022-'+month+'-01'
+    to_date = '2022-'+month+'-30'
     context = {
         'orderss':orders,
         'from':from_date,
-        'to':to_date
-        
+        'to':to_date  
     }
         
     return render(request, 'store_admin/report.html',context)
 
-def yearly_report(request):
-    last_year = datetime.now().date() - timedelta(days=365)
-    to_date = datetime.now().date()
-    orders = Order.objects.filter(order_date__lte=datetime.now().date(),order_date__gte=last_year,payment_status='success').order_by('-order_date')
+def yearly_report(request,year):
+    orders = Order.objects.filter(order_date__year = year, payment_status='success').order_by('-order_date')
+    from_date = year+'-01'+'-01'
+    to_date = year+'-12'+'-31'
     context = {
         'orderss':orders,
         'yearly':'yearly',
-        'from':last_year,
+        'from':from_date,
         'to':to_date
     }
     return render(request, 'store_admin/report.html',context)

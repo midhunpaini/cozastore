@@ -66,8 +66,6 @@ class Products(models.Model):
     image = models.ImageField(null=True, blank = True)
     description = models.CharField(max_length=250, null=True, blank=True)  
     category = models.ForeignKey(Category, on_delete = models.SET_NULL, blank = True, null = True)
-    size = models.ForeignKey(Size, on_delete = models.SET_NULL, blank = True, null = True)
-    color = models.ForeignKey(Color, on_delete = models.SET_NULL, blank = True, null = True)
     tags = models.ForeignKey(Tags, on_delete = models.SET_NULL, blank = True, null = True)
     price = models.FloatField()
     cost = models.FloatField( null=True, blank=True)
@@ -91,19 +89,7 @@ class Products(models.Model):
         else:
             return Products.get_all_product()
       
-    @staticmethod   
-    def get_all_product_by_color(color_id):
-        if color_id:
-            return Products.objects.filter(color = color_id)
-        else:
-            return Products.get_all_product()
-        
-    @staticmethod   
-    def get_all_product_by_size(size_id):
-        if size_id:
-            return Products.objects.filter(size = size_id)
-        else:
-            return Products.get_all_product()
+    
     
     @property
     def imageURL(self):
@@ -113,7 +99,26 @@ class Products(models.Model):
             url = ''
         return url
     
+
+
+class ProductVariation(models.Model):
+    product = models.ForeignKey(Products, on_delete = models.CASCADE, blank = True, null = True) 
+    color = models.ForeignKey(Color, on_delete = models.CASCADE, blank = True, null = True)   
+    size = models.ForeignKey(Size, on_delete = models.CASCADE, blank = True, null = True) 
     
+    @staticmethod   
+    def get_all_product_by_color(color_id):
+        if color_id:
+            return ProductVariation.objects.filter(color = color_id)
+        else:
+            return Products.get_all_product()
+        
+    @staticmethod   
+    def get_all_product_by_size(size_id):
+        if size_id:
+            return ProductVariation.objects.filter(size = size_id)
+        else:
+            return Products.get_all_product()
      
 class Coupon(models.Model):
     offer_choice = {
@@ -129,7 +134,7 @@ class Coupon(models.Model):
     validity = models.DateField(null=True, blank=True)
     
     def __str__(self):
-        return self.category.name  
+        return self.name  
     
 
 

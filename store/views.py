@@ -1,3 +1,4 @@
+import itertools
 from django.shortcuts import render,redirect
 from . models import *
 from django.http import JsonResponse, HttpResponse,HttpResponseRedirect
@@ -17,15 +18,13 @@ from django.conf import settings
 import razorpay
 import pytz
 from . forms import *
-
+from django.views.decorators.cache import cache_control
 
 
 def user_logged(request):
     return 'user_id' in request.session
     
 
-def user_cart(request):
-    return 'cart' in request.session
 
 
 def customer(request):
@@ -37,9 +36,7 @@ def customer(request):
 def home(request):
     sizes = Size.objects.all()
     colors= Color.objects.all()
-    
     products = None
-    
     color_id =  request.GET.get('colorid')
     size_id =  request.GET.get('sizeid')
     price_range = request.GET.get('price_range')
@@ -106,7 +103,7 @@ def signup(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         conf_password=request.POST.get('conf_pass')   
-        print(email) 
+       
 
         error_message = None
         
@@ -160,9 +157,9 @@ def signin(request):
 
         if check_password(password, user.password):
             request.session['user_id']=user.id
-            
+            user_cart(request)
             request.session['user_name']=user.name
-            get_user_cart(request)
+            
             return JsonResponse({'sucess':True,})
 
     except Exception:
@@ -175,7 +172,6 @@ def signin(request):
 
 
 def user_logout(request):
-    user_cart(request)
     request.session.flush()
     return render(request, 'store/home.html')
 
@@ -215,7 +211,7 @@ def verify_otp(request):
         if customer_otp ==otp:
             request.session['user_id']=user.id
             request.session['user_name']=user.name
-            get_user_cart(request)
+            user_cart(request)
             return JsonResponse({'sucess':True})
         else:
             message = "Wrong OTP"
@@ -233,12 +229,16 @@ def profile(request):
         user = Customer.objects.get(id = user_id)
         wishlist = Wishlist.objects.filter(customer=user)
  
-   
+    sizes = ProductVariation.objects.distinct().values('size__value')
+    colors = ProductVariation.objects.distinct().values('color__value','size__value')
     context ={
         'edit_pass_form':edit_pass_form,
         'address_form':address_form,
         'errors':errors,
-        'wishlist':wishlist
+        'wishlist':wishlist,
+        'sizes':sizes,
+        'colors':colors,
+        
     }
     return render(request, 'store/user-profile.html', context)
 
@@ -348,7 +348,6 @@ def add_customer_address(request):
     if request.method == 'POST':
         address_form = AddressForm(request.POST)
         if address_form.is_valid():
-         
             user_id = request.session.get('user_id')
             user = Customer.objects.get(id=user_id)
             fname = request.POST.get('fname')
@@ -398,6 +397,7 @@ def get_user_cart(request):
         customer_id = request.session.get('user_id')
         user = Customer.objects.get(id=customer_id)
         c= Cart.objects.filter(customer=user)
+    
         l = len(c)        
         for x in range(l):
             id = str(c[x].product.id)
@@ -407,8 +407,8 @@ def get_user_cart(request):
                 cart[id] = qty
             else:
                 cart = {id: qty}
-
-            request.session['cart'] = cart
+        del request.session['cart']
+            
             
 
            
@@ -417,10 +417,7 @@ def get_user_cart(request):
 def product(request):
     sizes = Size.objects.all()
     colors= Color.objects.all()
-
-   
     products = None
-    
     color_id =  request.GET.get('colorid')
     size_id =  request.GET.get('sizeid')
     price_range = request.GET.get('price_range')
@@ -429,13 +426,13 @@ def product(request):
     category = request.GET.get('cat')
     
     if color_id :
-        products = Products.get_all_product_by_color(color_id)
+        products = ProductVariation.get_all_product_by_color(color_id)
     elif all_product:
         products = Products.objects.all()
     elif category:
         products = Products.objects.filter(category = category)
     elif size_id:
-        products = Products.get_all_product_by_size(size_id)
+        products = ProductVariation.get_all_product_by_size(size_id)
     elif price_range:
         price_range = int(price_range)
         products = Products.objects.filter(price__gte=price_range, price__lte=price_range+250)
@@ -471,62 +468,91 @@ def delete_product(request):
  
     return render(request, 'store_admin/products.html', context)
 
-
+from PIL import Image
 def add_product(request):
     categorys = Category.objects.all()
     colors = Color.objects.all()
     sizes = Size.objects.all()
     if request.method == 'POST':
         try:
+            sizess = request.POST.getlist('size')
+            colorss = request.POST.getlist('color')
             name = request.POST.get('name')
             category = request.POST.get('category')
             category=Category.objects.get(name=category)
-            color = request.POST.get('color')
-            color = Color.objects.get(value=color)
-            size = request.POST.get('size')
-            size = Size.objects.get(value=size)
             description = request.POST.get('description')
-            stock = request.POST.get('stock')
-            cost = request.POST.get('cost')
-            price = request.POST.get('price')
+            stock = int(request.POST.get('stock'))
+            print(stock,'asdfsadfaasdfas')
+            cost = int(request.POST.get('cost'))
+            price = int(request.POST.get('price'))
             image = request.FILES.get('image')
             image2 = request.FILES.get('image2')
             image3 = request.FILES.get('image3')
             fprice = float(price)
-            date = request.POST.get('entry_date')
+
+            
         except Exception:
-            
-            color.DoesNotExist
-            size.DoesNotExist
-        
-            
-        new_product=Products.objects.create(
-            name=name,
-            color=color,
-            category=category,
-            size=size,
-            description=description,
-            stock=stock, 
-            price = fprice,
-            cost = cost,
-            date_entry=date,
-            image=image,
-            image2 = image2,
-            image3 = image3)
-        new_product.save()
-        return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes})
+            print('sapasapagnaasdnasd')
+            # color.DoesNotExist
+            # size.DoesNotExist
+        message = None
+        if stock < 0:
+            message = "Enter A valid Stock"
+        elif cost < 0 :
+            message = "Enter A valid cost"
+        elif price < 0 :
+            message = "Enter A valid price"
+
+        elif image is not None:
+            try:
+                Image.open(image)
+                Image.open(image2)
+                Image.open(image3)
+                print('vaseegara ')
+                new_product=Products.objects.create(
+                    name=name,
+                    category=category,
+                    description=description,
+                    stock=stock, 
+                    price = fprice,
+                    cost = cost,
+                    image=image,
+                    image2 = image2,
+                    image3 = image3)
+
+                l = len(sizess)
+                m = len(colorss)
+                print('product created')
+
+                for size, color in itertools.product(range(l), range(m)):
+                    variation = ProductVariation()
+                    variation.product = new_product
+                    variation.size = Size.objects.get(id=sizess[size])
+                    variation.color = Color.objects.get(id=colorss[color])
+                    variation.save()
+            except:
+                message= 'sorry, your image is invalid' 
+
+
+
+        return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes,'error':message})
 
     return render(request, 'store_admin/add-product.html', {'categorys':categorys, 'colors':colors, 'sizes':sizes})
+
+
 
 def get_product(request):   
     products = Products.objects.all()
     if request.method == 'POST':
-        categorys = Category.objects.all()
-        colors = Color.objects.all()
-        size = Size.objects.all()
         id = request.POST.get('product_id')
         product = Products.objects.get(id=id)
-        return render(request, 'store_admin/edit-product.html', {'product':product, 'categorys':categorys, 'colors':colors, 'size':size})           
+        categorys = Category.objects.all()
+        sizes = Size.objects.all()
+        colors = Color.objects.all()
+        sizes_v = ProductVariation.objects.filter(product=product).values('size')
+        colors_v = ProductVariation.objects.filter(product=product).values('color')
+        print(sizes_v,'asdfasdfasdfasdfasdf')
+        return render(request, 'store_admin/edit-product.html', {'product':product, 'categorys':categorys,'colors':colors, 'sizes_v':sizes_v,'colors_v':colors_v, 'sizes':sizes})           
     return render(request, 'store_admin/get-product.html', {'products':products})
 
 def edit_product(request):
@@ -534,7 +560,6 @@ def edit_product(request):
         id = request.POST.get('product_id')
         product = Products.objects.get(id=id)
         product.name = request.POST.get('name')
-     
         product.description = request.POST.get('description')
         product.stock = request.POST.get('stock')
         price = request.POST.get('price')
@@ -543,15 +568,21 @@ def edit_product(request):
         product.image3 = request.FILES.get('image3')
         product.price = float(price)
         category = request.POST.get('category')
-        color = request.POST.get('color')
-        sizes = request.POST.get('size')
         category=Category.objects.get(name=category)
-        color = Color.objects.get(value=color)
-        size = Size.objects.get(value=sizes)
         product.category = category
-        product.color = color
-        product.size = size
         product.save()
+        
+        sizess = request.POST.getlist('size')
+        colorss = request.POST.getlist('color')
+        
+        l = len(sizess)
+        m = len(colorss)
+        for size in range(l):
+           for color in range(m):
+               variation = ProductVariation.objects.get(product=product)
+               variation.size = Size.objects.get(id=sizess[size])
+               variation.color = Color.objects.get(id=colorss[color])
+               variation.save()
         return redirect('get_product')
      
     # except Exception:
@@ -563,42 +594,74 @@ def edit_product(request):
 
 
 
-# def modal(request):
-#     if request.method == 'POST':
-#         product_id = int(request.POST['product_id'])
- 
-#         mproduct = Products.objects.get(id=product_id)
-#         cart = request.session.get('cart')
-#         if cart:
-#             cart_items = len(cart.values())
-#         else:
-#             cart_items = 0
-#         data = {
-#             'product_name': mproduct.name,
-#             'product_description': mproduct.description,
-#             'product_image': mproduct.imageURL,
-#             'product_price': mproduct.price,
-#             'product_color': str(mproduct.color),
-#             'product_size': str(mproduct.size),
-#             'product_id': product_id,
-#             'cart_items': cart_items,
-#         }
-   
-#         return JsonResponse({'success': True, 'data': data})
-#     return render(request, 'store/modal.html')
 
 def modal(request,id):
-       
     product = Products.objects.get(id=id)
+    sizes = ProductVariation.objects.distinct().values('size__value')
+    colors = ProductVariation.objects.distinct().values('color__value','size__value')
+ 
     data = {
-        'product':product
+        'product':product,
+        'sizes':sizes,
+        'colors':colors
         }
     return render(request, 'store/product-detail2.html',data)
 
 
 
 def cart(request): 
+    if request.method == 'POST':
+        products_in_cart=[] 
+        # color = request.POST['color']
+        # size = request.POST['size']
+        product_id = request.POST['product_id']
+        if user_logged(request):
+            user = customer(request)
+            product = Products.objects.get(id=product_id)
+            if Cart.objects.filter(customer=user, product=product).exists():
+                cart = Cart.objects.get(customer=user, product=product)
+                cart.quantity+=1
+                cart.save()
+                carts = Cart.objects.filter(customer=user)
+                for item in carts:
+                    products_in_cart.append(item.product) 
+                    cart_items = Cart.objects.filter(customer=user).count()
+                    cart_count = Cart.objects.filter(customer=user).count()
+            else:
+                Cart.objects.create(customer=user,product=product,quantity=1)
+                carts = Cart.objects.filter(customer=user)
+                for item in carts:
+                    products_in_cart.append(item.product) 
+                cart_items = Cart.objects.filter(customer=user).count()
+                cart_count = Cart.objects.filter(customer=user).count()
+        else:
+            cart = request.session.get('cart')
+            if cart:
+                if product_id in cart.keys():
+                    cart[product_id] +=1
+                else:
+                    cart[product_id] = 1
+            else:
+                cart = {product_id: 1}
+            
+            request.session['cart'] = cart
+    
+            keys = cart.keys()
+            cart_count = len(keys)
+            products_in_cart = []
+            for id in keys:
+                id = int(id)
+                product = Products.objects.get(id=id)
+                products_in_cart.append(product)
+            cart_items = len(cart.values())
+        data = {
+            'products_in_cart':products_in_cart,
+        }
+        return JsonResponse({'cart_items':cart_items, 'cart_count':cart_count})
+    
+    
     if request.method == 'GET':  
+        data = {}
         if cart := request.session.get('cart'):
             keys = cart.keys()
 
@@ -609,40 +672,20 @@ def cart(request):
                 products_in_cart.append(product)
             data = {
             'products_in_cart':products_in_cart,
-        }    
-        else:
-            data = {}     
+            }
+        elif user_logged(request):
+            user = customer(request)
+            products_in_cart = []
+            cart = Cart.objects.filter(customer=user)
+            for item in cart:
+               products_in_cart.append(item.product) 
+            print(products_in_cart,'get') 
+            data = {
+                'products_in_cart':products_in_cart,
+            }   
 
-    if request.method == 'POST': 
-      
-        product_id = request.POST['product_id']
-        cart = request.session.get('cart')
-        if cart:
-            if product_id in cart.keys():
-                cart[product_id] +=1
-            else:
-                cart[product_id] = 1
-        else:
-            cart = {product_id: 1}
+        return render(request,'store/shoping-cart.html',data)
 
-        request.session['cart'] = cart
- 
-        keys = cart.keys()
-        cart_count = len(keys)
-        products_in_cart = []
-        for id in keys:
-            id = int(id)
-            product = Products.objects.get(id=id)
-            products_in_cart.append(product)
-        cart_items = len(cart.values())
-        data = {
-            'products_in_cart':products_in_cart,
-        }
-        return JsonResponse({'cart_items':cart_items, 'cart_count':cart_count})
-    try:
-         return render(request,'store/shoping-cart.html',data)
-    except:
-        return render(request,'store/shoping-cart.html')
 
 
 def modify_cart(request):
@@ -655,7 +698,7 @@ def modify_cart(request):
     products = Products.objects.all()
     product = Products.objects.get(id = product_id)
     product_price = offer_price(product)
-    carts = request.session.get('cart')
+    
     
     
     new_quantity = quantity
@@ -670,19 +713,35 @@ def modify_cart(request):
     else:
         total_price = product_price * 10
 
-    cart = request.session.get('cart')
-    if cart:
-        if quantity==10:
-            cart[product_id] = 10
-        elif change == 'plus' and quantity<10:
-            cart[product_id] = quantity + 1
-        elif change == 'minus' and quantity > 1:
-            cart[product_id] = quantity - 1
-    elif change == 'plus' and quantity < 10:
-        cart = {product_id: quantity + 1}
-    elif quantity > 1:
-        cart = {product_id: quantity - 1}
-    request.session['cart'] = cart
+    
+    if user_logged(request):
+            user = customer(request)
+            if Cart.objects.filter(customer=user, product=product).exists():
+                cart = Cart.objects.get(customer=user, product=product)
+                if cart.quantity<10:
+                    cart.quantity = new_quantity
+                else:
+                    cart.quantity = 10
+                cart.save()
+                carts = {}
+                c = Cart.objects.filter(customer=user)
+                for p in c:
+                    carts[p.product.id]=p.quantity
+    else:
+        carts = request.session.get('cart')
+        cart = request.session.get('cart')
+        if cart:
+            if quantity==10:
+                cart[product_id] = 10
+            elif change == 'plus' and quantity<10:
+                cart[product_id] = quantity + 1
+            elif change == 'minus' and quantity > 1:
+                cart[product_id] = quantity - 1
+        elif change == 'plus' and quantity < 10:
+            cart = {product_id: quantity + 1}
+        elif quantity > 1:
+            cart = {product_id: quantity - 1}
+        request.session['cart'] = cart
 
     
     discount_total = total_discount(products,carts)
@@ -699,11 +758,19 @@ def modify_cart(request):
         'sub_total':sub_total
         
     }
-
+   
     return JsonResponse(datas)
 
 def check_cart(request):
-    cart = request.session.get('cart')
+    if user_logged(request):
+        user = customer(request)
+        c = Cart.objects.filter(customer=user) 
+        cart = {}
+        for p in c:
+            cart[p.product.id]=p.quantity 
+    else:
+        if 'cart' in request.session:
+            cart = request.session['cart']
  
     if cart == None:
         cart_items = 0
@@ -720,6 +787,7 @@ def stock(request):
     product.stock>=qty
     return True
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 def del_cart_item(request):
     if request.method =='POST':
         data = json.load(request)
@@ -739,9 +807,19 @@ def del_cart_item(request):
             except Exception:
                 pass
 
-        cart = request.session.get('cart')
-        cart.pop(product_id)
-        request.session['cart'] = cart
+        
+        if user_logged:
+            user = Customer.objects.get(id=user_id)
+            c = Cart.objects.filter(customer=user) 
+            cart = {}
+            for p in c:
+                cart[p.product.id]=p.quantity
+    
+        else:
+            cart = request.session.get('cart')
+            cart.pop(product_id)
+            request.session['cart'] = cart
+        
         
         products = Products.objects.all()
         cart_price = total_cart_price(products, cart)
@@ -751,40 +829,61 @@ def del_cart_item(request):
         return JsonResponse({'success':True, 'cart_price':cart_price, 'cart_items':cart_items})
     return redirect('/')
 
-
+ 
 def checkout(request):
-    if 'user_id' in request.session:
-        user_id = request.session.get('user_id')
-        user_addresses = UserAddress.objects.filter(customer = user_id)
-        
-    if 'cart' not in request.session:
-        return redirect('/')
-    cart = request.session.get('cart')      
-    keys = cart.keys()
     products_in_cart = []
-    for id in keys:
-        id = int(id)
-        product = Products.objects.get(id=id)
-        products_in_cart.append(product)        
+    if user_logged(request):
+        user = customer(request)
+        c = Cart.objects.filter(customer=user) 
+        cart = {}
+        for p in c:
+            cart[p.product.id]=p.quantity
+            products_in_cart.append(p.product) 
+                    
+    else:
+        cart = request.session.get('cart')      
+        keys = cart.keys()
+        for id in keys:
+            id = int(id)
+            product = Products.objects.get(id=id)
+            products_in_cart.append(product)     
+    if not cart:
+        return redirect('/')
+          
     
     if request.method == 'POST':        
         product_id = request.POST.get('product_id')
         quantity = int(request.POST.get('num-product1'))
-        cart = request.session.get('cart')
-        if cart:
-            cart[product_id] = quantity
-        else:
-            cart = {product_id: quantity}
+        
+        if user_logged(request):
+            user = customer(request)
+            product = Products.objects.get(id=product_id)
+            if Cart.objects.filter(customer=user, product=product).exists():
+                cart = Cart.objects.get(customer=user, product=product)
+                cart.quantity = quantity
+                cart.save()
+                products_in_cart = []
+                carts = Cart.objects.filter(customer=user) 
+                for item in carts:
+                    product = Products.objects.get(id=item.product.id)
+                    products_in_cart.append(product)
+            
+        else:    
+            cart = request.session.get('cart')
+            if cart:
+                cart[product_id] = quantity
+            else:
+                cart = {product_id: quantity}
 
-        request.session['cart'] = cart
-        
-        keys = cart.keys()
-        products_in_cart = []
-        for id in keys:
-            id = int(id)
-            product = Products.objects.get(id=id)
-            products_in_cart.append(product)
-        
+            request.session['cart'] = cart
+            
+            keys = cart.keys()
+            products_in_cart = []
+            for id in keys:
+                id = int(id)
+                product = Products.objects.get(id=id)
+                products_in_cart.append(product)
+       
         return render(request, 'store/checkout.html',{'cart_products':products_in_cart})
         
     return render(request, 'store/checkout.html',{'cart_products':products_in_cart})
@@ -823,13 +922,21 @@ def make_order(items,user_id,shipping_address,payment_option,discount,request,to
 
 
 
-def order(request): 
+def order(request):
+    if user_logged(request):
+        user = customer(request)
+        c = Cart.objects.filter(customer=user) 
+        cart = {}
+        for p in c:
+            cart[p.product.id]=p.quantity 
+    else:
+        if 'cart' in request.session:
+            cart = request.session['cart']
+    
+     
     if request.method =='POST':
-
-        cart = request.session.get('cart')
         products= Products.objects.all()
         total_price =total_cart_price_discount(products,cart)
-        user_cart(request) 
         fname = request.POST['fname']
         coupon_code = request.POST['coupon_code']
         lname = request.POST['lname']
@@ -844,7 +951,7 @@ def order(request):
         address_option= request.POST['address_option']
         discount =  request.POST['discount']
         discount = float(discount)
-        print(type(discount),'klasdjsdhflkashdfhasdhf')
+       
         if user_logged(request):
             user_id = request.session.get('user_id')
             user = customer(request)
@@ -880,9 +987,9 @@ def order(request):
             
 
             if not error_message and payment_option == 'cod':
-                print('iscount check', discount)
+          
                 make_order(items,user_id,shipping_address,payment_option,discount,request,total_price)
-                del request.session['cart']
+    
                 return JsonResponse({'success':True,  'payment':payment_option}) 
             
     
@@ -890,12 +997,10 @@ def order(request):
                 paypal_id=make_order(items,user_id,shipping_address,payment_option,discount,request,total_price)
                 cart_total = total_price - discount
                 request.session['paypal_id'] = paypal_id
-                del request.session['cart']
                 return JsonResponse({'success':True, 'payment':payment_option, 'cart_total':cart_total,'paypal_id':paypal_id})
             
             if not error_message and payment_option == 'razorpay':
                 order_values = make_order(items,user_id,shipping_address,payment_option,discount,request,total_price)
-                del request.session['cart']
                 return JsonResponse({'success':True, 'payment':payment_option, 'razorpay':order_values[0],'razor_id':order_values[1]})
             
         else:
@@ -904,9 +1009,11 @@ def order(request):
             shipping_address = user_address.shipping_address
             
             if not error_message and payment_option == 'cod':
-                print('iscount check', discount)
+            
                 make_order(items,user_id,shipping_address,payment_option,discount,request,total_price)
-                del request.session['cart']
+        
+                get_user_cart(request)
+                user_cart(request)
                 return JsonResponse({'success':True,  'payment':payment_option}) 
             
             if not error_message and payment_option == 'paypal':
@@ -914,27 +1021,20 @@ def order(request):
                 paypal_id = str(paypal_id)
                 request.session['paypal_id'] = paypal_id
                 cart_total = total_price - discount
-                del request.session['cart']
                 return JsonResponse({'success':True, 'payment':payment_option, 'cart_total':cart_total,'paypal_id':paypal_id})
             
             if not error_message and payment_option == 'razorpay':
                 order_values = make_order(items,user_id,shipping_address,payment_option,discount,request,total_price)
-                del request.session['cart']
                 return JsonResponse({'success':True, 'payment':payment_option, 'razorpay':order_values[0],'razor_id':order_values[1]})
 
 
       
 def paypal_success(request):
     if request.method =='GET':
-        print('inside paypal')
         paypal_id = request.GET.get('paypal_id')
-        print(paypal_id)
         orders = Order.objects.filter(paypal_id=paypal_id)
         for order in orders:
-            print('inside lop paypal *******************************************')
-            print(paypal_id, '     ',order.paypal_id)
             order.payment_status = 'success'
-            print('payment success')
             order.save()
         del request.session['paypal_id']
     return JsonResponse({'success':True})

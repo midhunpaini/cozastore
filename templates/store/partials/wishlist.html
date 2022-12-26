@@ -1,7 +1,7 @@
 {%load static%}
 <div><h2 class="m-5">Wishlist</h2></div>
 {% for list in wishlist %}
-<div class="card m-3 mx-auto" style="max-width: 640px;" id="wishlist_card{{list.product.id}}">
+<div class="card m-3 mx-auto" data-count="{{ forloop.counter }}" style="max-width: 640px;" id="wishlist_card{{list.product.id}}">
     <div class="row g-0">
       <div class="col-md-4">
         <img src="{{ list.product.imageURL }}" class="img-fluid rounded-start" alt="...">
@@ -11,16 +11,31 @@
           <h5 class="card-title"><h5 class="card-title">{{ list.product.name }}</h5></h5>
           <h5 class="card-text">Price: ₹{{ list.product.price }}</h5>
           <p class="card-text">Added On: {{ list.wish_date }}</p>
-          <p class="card-text">Color: {{ list.product.color }}</p>
-          <p class="card-text">Size: {{ list.product.size }}</p>
+          <div class="d-flex">
+            <p class="card-text">Size: 
+              <select class="form-select choose-size" id="size_select" name="time">
+                {% for size in sizes %}			
+                <option class="choose-size" id="color{{ size.size__value }}"  data-size="{{ size.size__value }}">{{ size.size__value }}</option>
+                {% endfor %}
+              </select>
+            </p>
+            <p class="card-text">Color: 
+              <select class="form-select" name="time" id="color_select">
+                {% for color in colors %}
+                <option class="choose-color size{{ color.size__value }}">{{ color.color__value }}</option>
+                {% endfor %}
+              </select>
+            </p>
+          </div>
         </div>
         <input type="text" value="{{ list.product.name }}" hidden>
-        <button class="btn btn-success btn-lg mt-5 ms-5 add_from_wishlist" pid="{{ list.product.id }}">Add to Cart</button>
-        <button class="btn btn-danger btn-lg mt-5 remove_from_wishlist" pid="{{ list.product.id }}">Remove</button>
+        <button class="btn btn-success btn-lg mt-3 ms-5 add_from_wishlist" pid="{{ list.product.id }}">Add to Cart</button>
+        <button class="btn btn-danger btn-lg mt-3 remove_from_wishlist" pid="{{ list.product.id }}">Remove</button>
         {%csrf_token%}
     </div>
     </div>
   </div> 
+  <img src="{% static 'store/images/icons/empty_wishlist.png' %}" alt="" id="empty_wish_pic1" style="display: none;">
 {% endfor %}
 {% if not wishlist %}
 <img src="{% static 'store/images/icons/empty_wishlist.png' %}" alt="" id="empty_wish_pic">

@@ -288,8 +288,22 @@
 
     $('#monthly_report').change(function(){
         let month = $('#monthly_report').val()
-        console.log(month,'******************')
         location.href=/adminmonthly_report/+ month
+        
     });
 
+    $('#yearly_report').change(function(){
+        let month = $('#yearly_report').val()
+        location.href=/adminyearly_report/+ month
+        
+    });
+
+   
+
 })(jQuery);
+
+let order = $('#order_report').val()
+        if(order==undefined){
+            $('#order_alert').html('No reports Available')
+        }
+

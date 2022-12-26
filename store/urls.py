@@ -41,5 +41,4 @@ urlpatterns = [
     path('search',views.search, name='search'),
     path('wishlists',views.wishlists, name='wishlists'),
     path('remove_wishlists',views.remove_wishlists, name='remove_wishlists'),
-    
 ]

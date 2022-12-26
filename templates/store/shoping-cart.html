@@ -53,7 +53,7 @@
 												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div>
 
-											<input readonly class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="{{item|cart_quantity:request.session.cart}}">
+											<input readonly class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="{{item|cart_quantity:cart}}">
 
 											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" >
 												<i class="fs-16 zmdi zmdi-plus"></i>
@@ -62,7 +62,7 @@
 										
 										</div>
 									</td>
-									<td class="column-5"  id='{{item.id}}' name="{{item.id}}">₹{{item|price_total_without_discount:request.session.cart}}</td>
+									<td class="column-5"  id='{{item.id}}' name="{{item.id}}">₹{{item|price_total_without_discount:cart}}</td>
 									<td ><img class = "del_item" src="{%static 'store/images/icons/delete.png'%}"  alt="del" style="width: 16px; margin-right: 25px; cursor: pointer;">
 										<input type="text" hidden value="{{item.id}}" name="product_id" id="">
 									</td>
@@ -89,9 +89,9 @@
 								</span>
 							</div>
 							<div class="size-209 p-t-1">
-								{%if request.session.cart%}
+								{%if cart%}
 								<span class="mtext-110 cl2" id ='sub_total_price'>
-									₹ {{products_in_cart|total_cart_price_discount:request.session.cart}}
+									₹ {{products_in_cart|total_cart_price_discount:cart}}
 								</span>
 								{%else%}
 								<span class="mtext-110 cl2">
@@ -105,9 +105,9 @@
 								</span>
 							</div>
 							<div class="size-209 p-t-1">
-								{%if request.session.cart%}
+								{%if cart%}
 								<span class="mtext-110 cl2" id ='discount_total_price'>
-									₹ {{products_in_cart|total_discount:request.session.cart}}
+									₹ {{products_in_cart|total_discount:cart}}
 								</span>
 								{%else%}
 								<span class="mtext-110 cl2">
@@ -123,9 +123,9 @@
 							</div>
 
 							<div class="size-209 p-t-1">
-								{%if request.session.cart%}
+								{%if cart%}
 								<span class="mtext-110 cl2" id ='total_price'>
-									₹ {{products_in_cart|total_cart_price:request.session.cart}}
+									₹ {{products_in_cart|total_cart_price:cart}}
 								</span>
 								{%else%}
 								<span class="mtext-110 cl2">

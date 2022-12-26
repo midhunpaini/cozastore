@@ -118,17 +118,17 @@
                       <tbody>
                         {%for item in cart_products %}
                         <tr>
-                          <td>{{item.name}} <strong class="mx-2">x</strong> {{item|cart_quantity:request.session.cart}}</td>
-                          <td>₹{{item|price_total:request.session.cart}}</td>
+                          <td>{{item.name}} <strong class="mx-2">x</strong> {{item|cart_quantity:cart}}</td>
+                          <td>₹{{item|price_total:cart}}</td>
                         </tr>
                         {%endfor%}
                         <tr>
-                          <td class="text-black font-weight-bold"><strong id="sub_total" sub = "{{cart_products|total_cart_price_discount:request.session.cart}}">Cart Subtotal</strong></td>
-                          <td class="text-black" >₹ {{cart_products|total_cart_price_discount:request.session.cart}}</td>
+                          <td class="text-black font-weight-bold"><strong id="sub_total" sub = "{{cart_products|total_cart_price_discount:cart}}">Cart Subtotal</strong></td>
+                          <td class="text-black" >₹ {{cart_products|total_cart_price_discount:cart}}</td>
                         </tr>
                         <tr>
                           <td class="text-black font-weight-bold"><strong>Discount</strong></td>
-                          <td class="text-black"id='discount_amount' dis="{{ cart_products|total_discount:request.session.cart }}">₹{{ cart_products|total_discount:request.session.cart }}</td>
+                          <td class="text-black"id='discount_amount' dis="{{ cart_products|total_discount:cart }}">₹{{ cart_products|total_discount:cart }}</td>
                         </tr>
                         <tr>
                           <div class="flex-w flex-m m-r-20 m-tb-5">
@@ -140,7 +140,7 @@
                         </tr>
                         <tr>
                           <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                          <td class="text-black font-weight-bold" ><strong id="order_total">₹{{cart_products|total_cart_price:request.session.cart}}</strong></td>
+                          <td class="text-black font-weight-bold" ><strong id="order_total">₹{{cart_products|total_cart_price:cart}}</strong></td>
                         </tr>
                       </tbody>
                     </table>

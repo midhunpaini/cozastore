@@ -74,6 +74,7 @@ TEMPLATES = [
                 'store.context_processors.shipping_address',
                 'store.context_processors.product_context',
                 'store.context_processors.orders',
+                'store.context_processors.cart',
             ],
         },
     },

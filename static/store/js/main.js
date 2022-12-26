@@ -405,6 +405,8 @@
             type: "POST",
             dataType: "json",
             data: {
+                color:$('#color_select').val(),
+                size:$('#size_select').val(),
                 product_id: $(this).next().val(),
                 cart_count: 1,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
@@ -1092,6 +1094,7 @@
                         console.log(data)
                         $('.wishlist_item_count').attr('data-notify',data.wish_count)
                         document.getElementById(card_id).remove()
+                        
                     },
                 })
                 $('.cart_count_noti').attr('data-notify',data.cart_count)	 
@@ -1109,7 +1112,7 @@
         let product_name = $(this).prev().prev().val()
         let product_id = $(this).attr('pid')
         let card_id = 'wishlist_card'+product_id
-        console.log(product_name+'dfasdfasdfasdfasdf')
+       
         
         $.ajax({
             url: '/remove_wishlists',
@@ -1125,7 +1128,9 @@
                 
                 $('.wishlist_item_count').attr('data-notify',data.wish_count)
                 document.getElementById(card_id).remove() 
-
+                if ($(card_id).attr('data-count')<1){
+                    $('#empty_wish_pic1').css("display", "block");
+                }
                 if(product_name==undefined){
                     alert('empty wishlist')
                 }
@@ -1136,102 +1141,27 @@
         });
    
     });
-    function imageZoom(imgID, resultID) {
-        var img, lens, result, cx, cy;
-        img = document.getElementById(imgID);
-        result = document.getElementById(resultID);
-        /*create lens:*/
-        lens = document.createElement("DIV");
-        lens.setAttribute("class", "img-zoom-lens");
-        /*insert lens:*/
-        img.parentElement.insertBefore(lens, img);
-        /*calculate the ratio between result DIV and lens:*/
-        cx = result.offsetWidth / lens.offsetWidth;
-        cy = result.offsetHeight / lens.offsetHeight;
-        /*set background properties for the result DIV:*/
-        result.style.backgroundImage = "url('" + img.src + "')";
-        result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
-        /*execute a function when someone moves the cursor over the image, or the lens:*/
-        lens.addEventListener("mousemove", moveLens);
-        img.addEventListener("mousemove", moveLens);
-        /*and also for touch screens:*/
-        lens.addEventListener("touchmove", moveLens);
-        img.addEventListener("touchmove", moveLens);
-        function moveLens(e) {
-          var pos, x, y;
-          /*prevent any other actions that may occur when moving over the image:*/
-          e.preventDefault();
-          /*get the cursor's x and y positions:*/
-          pos = getCursorPos(e);
-          /*calculate the position of the lens:*/
-          x = pos.x - (lens.offsetWidth / 2);
-          y = pos.y - (lens.offsetHeight / 2);
-          /*prevent the lens from being positioned outside the image:*/
-          if (x > img.width - lens.offsetWidth) {x = img.width - lens.offsetWidth;}
-          if (x < 0) {x = 0;}
-          if (y > img.height - lens.offsetHeight) {y = img.height - lens.offsetHeight;}
-          if (y < 0) {y = 0;}
-          /*set the position of the lens:*/
-          lens.style.left = x + "px";
-          lens.style.top = y + "px";
-          /*display what the lens "sees":*/
-          result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
-        }
-        function getCursorPos(e) {
-          var a, x = 0, y = 0;
-          e = e || window.event;
-          /*get the x and y positions of the image:*/
-          a = img.getBoundingClientRect();
-          /*calculate the cursor's x and y coordinates, relative to the image:*/
-          x = e.pageX - a.left;
-          y = e.pageY - a.top;
-          /*consider any page scrolling:*/
-          x = x - window.pageXOffset;
-          y = y - window.pageYOffset;
-          return {x : x, y : y};
-        }
-      }
-      $(".img-zoom-container").on({
-        mouseenter: function () {
-            $("#myresult").css("display", "block");
-            imageZoom("myimage", "myresult");
-        },
-        mouseleave: function () {
-            $("#myresult").css("display", "none");
-        }
-    })
-    $(".img-zoom-container").on({
-        mouseenter: function () {
-            $("#myresult").css("display", "block");
-            imageZoom("myimage2", "myresult");
-        },
-        mouseleave: function () {
-            $("#myresult").css("display", "none");
-        }
-    })
-    $(".img-zoom-container").on({
-        mouseenter: function () {
-            $("#myresult").css("display", "block");
-            imageZoom("myimage3", "myresult");
-        },
-        mouseleave: function () {
-            $("#myresult").css("display", "none");
-        }
-    })
+    
       
+     
+
+
+
+    $('.choose-color').hide();
+
+    $('.choose-size').on('change',function(){
+        var color = $('#size_select').val()
+        $('.choose-color').hide();
+        $('.size'+color).show();
+})
+    
 
 })(jQuery);
 
 
 
-
-  
-
-
-
-
-        if(localStorage.getItem('wish')){     
-        document.getElementById('customer_wishlist').style.display = 'block';
-        document.getElementById('customer_orders').style.display = 'none';
-        localStorage.removeItem('wish')
-        }
+if(localStorage.getItem('wish')){     
+document.getElementById('customer_wishlist').style.display = 'block';
+document.getElementById('customer_orders').style.display = 'none';
+localStorage.removeItem('wish')
+}

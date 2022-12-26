@@ -10,7 +10,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div id = 'register_form'>
+          <div id = 'register_form' style="display: none;">
             <form  id="register">
               {%csrf_token%} 
               <div class="col-12">
@@ -43,7 +43,7 @@
           </div>
         
           <!-- email login -->
-            <div id="email_login" style="display: none;">
+            <div id="email_login" style="display: block;">
               <form id="signin_form">
                 {%csrf_token%}
                 <div class="form-floating mb-3">

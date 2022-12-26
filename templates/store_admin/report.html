@@ -15,8 +15,8 @@
 <table class="table text-center">
     <thead>
         <tr>
-            <th><label for="from_date"></label>From<input class="form-control"  value="{{from|date:'Y-m-d'}}" type="date" name="from_date" id="from_date"></th>
-            <th><label for="to_date"></label>To<input class="form-control" value="{{to|date:'Y-m-d'}}" type="date" name="to_date" id="to_date"></th>
+            <th><label for="from_date"></label>From<input class="form-control"  value="{{from}}" type="date" name="from_date" id="from_date"></th>
+            <th><label for="to_date"></label>To<input class="form-control" value="{{to}}" type="date" name="to_date" id="to_date"></th>
             <th></th>
             <th></th>
             <th></th>
@@ -37,7 +37,17 @@
                 <option name="December" value="12">December</option>
               </select>
             </th>
-            <th><a href="{% url 'yearly_report' %}" type="button" class="btn btn-primary"> Yearly</a></th>
+            <th>
+                <select class="custom-select" style="width: 5rem;" placeholder="Year" id="yearly_report">
+                <option selected style="display:none;">Yearly </option>
+                <option name="2019" value="2019">2019</option>
+                <option name="2020" value="2020">2020</option>
+                <option name="2021" value="2021">2021</option>
+                <option name="2022" value="2022">2022</option>
+              </select>
+            </th>
+
+           
             
         </tr>
         <tr >
@@ -66,6 +76,7 @@
         {% load mathfilters %}
         {% for order in orderss %}
         <tr >
+            <input type="text" value="{{order}}" hidden id="order_report">
             <td>{{ order.items.product.name }}</td>       
             <td>{{ order.customer.name|capfirst }}</td>
             <td>{{ order.order_price }}</td>
@@ -75,8 +86,11 @@
             <td>{{ order.order_price|sub:order.items.product.cost|mul:order.items.quantity }}</td>
         </tr>  
         {% endfor %}
+        
     </tbody>
+    
 </table>
+<h2 class="alert" id="order_alert" style="color: white;"></h2>
 </div>
 
 {%endblock%}

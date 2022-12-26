@@ -36,7 +36,7 @@
 							<div class="slick3 gallery-lb img-zoom-container">
 								<div class="item-slick3" data-thumb="/media/{{ product.image }}" id="img1">
 									<div class="wrap-pic-w pos-relative">
-										<img src="/media/{{ product.image }}" alt="IMG-PRODUCT" id="myimage">
+										<img src="/media/{{ product.image }}"  onmouseover="zoom1()" alt="IMG-PRODUCT" id="myimage">
 										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="/media/{{ product.image }}">
 											<i class="fa fa-expand"></i>
 										</a>
@@ -45,7 +45,7 @@
 
 								<div class="item-slick3" data-thumb="/media/{{ product.image2 }}" id="img2">
 									<div class="wrap-pic-w pos-relative">
-										<img src="/media/{{ product.image2 }}" alt="IMG-PRODUCT" id="myimage2">
+										<img src="/media/{{ product.image2 }}" onmouseover="zoom2()" alt="IMG-PRODUCT" id="myimage2">
 
 										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="/media/{{ product.image2 }}">
 											<i class="fa fa-expand"></i>
@@ -55,7 +55,7 @@
 
 								<div class="item-slick3" data-thumb="/media/{{ product.image3 }}" id="img3">
 									<div class="wrap-pic-w pos-relative">
-										<img src="/media/{{ product.image3 }}" alt="IMG-PRODUCT" id="myimage3">
+										<img src="/media/{{ product.image3 }}"  onmouseover="zoom3()" alt="IMG-PRODUCT" id="myimage3">
 
 										<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="/media/{{ product.image3 }}">
 											<i class="fa fa-expand"></i>
@@ -90,11 +90,11 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="time">
-											<option>{{ product.size }}</option>
-											
+										<select class="form-select choose-size" id="size_select" name="time">
+											{% for size in sizes %}			
+											<option class="choose-size" id="color{{ size.size__value }}"  data-size="{{ size.size__value }}">{{ size.size__value }}</option>
+											{% endfor %}
 										</select>
-										<div class="dropDownSelect2"></div>
 									</div>
 								</div>
 							</div>
@@ -106,11 +106,12 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="time">
-											<option>{{ product.color }}</option>
-										
+										<select class="form-select" name="time" id="color_select">
+											{% for color in colors %}
+											<option class="choose-color size{{ color.size__value }}">{{ color.color__value }}</option>
+											{% endfor %}
 										</select>
-										<div class="dropDownSelect2"></div>
+									
 									</div>
 								</div>
 							</div>
@@ -129,7 +130,7 @@
 										</div>
 									</div> -->
 
-									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" id="add_cart_button">
+									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" id="add_cart_button" style="margin-top: 200px;">
 										Add to cart
 									</button>
 										<input type="text" value="{{ product.id }}" hidden>

@@ -52,4 +52,19 @@ def orders(request):
     else:
         return{}
  
- 
+def cart(request):
+    if 'user_id' in request.session:
+        user_id = request.session.get('user_id')
+        user = Customer.objects.get(id=user_id)
+        c = Cart.objects.filter(customer=user) 
+        cart = {}
+        for p in c:
+            cart[p.product.id]=p.quantity 
+    else:
+        if 'cart' in request.session:
+            cart = request.session['cart']
+             
+        else:
+            cart ={}
+      
+    return {'cart':cart}
