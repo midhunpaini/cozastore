@@ -729,9 +729,9 @@ def check_cart(request):
         c = Cart.objects.filter(customer=user).exists()
         
     if c:
-        cart_items = 0
-    else:
         cart_items = 1
+    else:
+        cart_items = 0
     return JsonResponse({'sucess': True, 'cart_items': cart_items})
 
 
