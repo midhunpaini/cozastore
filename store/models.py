@@ -120,7 +120,7 @@ class ProductVariation(models.Model):
     @staticmethod   
     def get_all_product_by_size(size_id):
         if size_id:
-            variations = ProductVariation.objects.filter(size = size_id)
+            variations = ProductVariation.objects.filter(size = size_id).distinct('product')
             products = []
             for product in variations:
                 products.append(product.product)
