@@ -49,9 +49,9 @@ $('#send_otp_btn').on('click',function(e){
 			console.log(data)
 			
 			if(data.message==undefined){
-				document.getElementById('otpinput').style.display = 'block';
+				document.getElementById('otpinput').style.display = 'inline';
 				document.getElementById('send_otp_btn').style.display = 'none';
-				document.getElementById('submit_otp').style.display = 'block';
+				document.getElementById('submit_otp').style.display = 'inline';
 				$(document).on('submit','#otp_form',function(e){
 					e.preventDefault();
 					console.log(mobile)
