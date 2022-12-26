@@ -109,14 +109,22 @@ class ProductVariation(models.Model):
     @staticmethod   
     def get_all_product_by_color(color_id):
         if color_id:
-            return ProductVariation.objects.filter(color = color_id)
+            variations = ProductVariation.objects.filter(color = color_id).distinct()
+            products = []
+            for product in variations:
+                products.append(product.product)
+            return products
         else:
             return Products.get_all_product()
         
     @staticmethod   
     def get_all_product_by_size(size_id):
         if size_id:
-            return ProductVariation.objects.filter(size = size_id)
+            variations = ProductVariation.objects.filter(size = size_id).distinct()
+            products = []
+            for product in variations:
+                products.append(product.product)
+            return products
         else:
             return Products.get_all_product()
      
