@@ -22,7 +22,7 @@
                 {% if order.returnOrder == True and order.order_status == 'delivered'%}
                 <button class="btn btn-outline-danger ms-auto customer_order_return" cid="{{order.items.id}}" oid="{{order.id}}">Return</button> 
                 {% endif %}
-                <button class="btn btn-primary text-uppercase ms-2 order-info-button" data-bs-toggle="modal" data-bs-target="#order_info_modal" cid="{{order.items.id}}" oid="{{order.id}}">order info</button>
+               
             </div>
             <div class="progressbar-track">
                 <ul class="progressbar">
