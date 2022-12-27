@@ -59,17 +59,13 @@
                   <div class="form-group mb-3">
                     <label for="size">Size</label>
                     {%for size in sizes%}
-                    {% if size in sizes_v %}
-                    <input checked type="checkbox" name="size_v" value="{{size}}">{{size}} 
-                    {% else %}
-                    <input type="checkbox" name="size" value="{{size}}">{{size}} 
-                    {% endif %}
+                    <input type="checkbox" name="size" value="{{size.id}}">{{size}} 
                     {%endfor%}
                   </div>
                   <div class="form-group mb-3">
                     <label for="color">Color</label>
                       {%for color in colors%}
-                      <input name="color" type="checkbox" value="{{color}}">{{color}}
+                      <input name="color" type="checkbox" value="{{color.id}}">{{color}}
                       {%endfor%}
                   </div>
                   <div class="row">
