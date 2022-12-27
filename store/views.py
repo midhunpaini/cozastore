@@ -46,7 +46,7 @@ def home(request):
     if color_id:
         products = ProductVariation.get_all_product_by_color(color_id)
     elif all_product:
-        products = Products.objects.all()
+        products = Products.objects.all()[:4]
     elif size_id:
         products = ProductVariation.get_all_product_by_size(size_id)
     elif price_range:
