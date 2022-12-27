@@ -60,7 +60,7 @@
                     <label for="size">Size</label>
                     {%for size in sizes%}
                     {% if size in sizes_v %}
-                    <input checked type="checkbox" name="size" value="{{size}}">{{size}} 
+                    <input checked type="checkbox" name="size_v" value="{{size}}">{{size}} 
                     {% else %}
                     <input type="checkbox" name="size" value="{{size}}">{{size}} 
                     {% endif %}
