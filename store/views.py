@@ -517,11 +517,8 @@ def get_product(request):
         categorys = Category.objects.all()
         sizes = Size.objects.all()
         colors = Color.objects.all()
-        sizes_v = ProductVariation.objects.filter(
-            product=product).values('size')
-        colors_v = ProductVariation.objects.filter(
-            product=product).values('color')
-        print(sizes_v, 'asdfasdfasdfasdfasdf')
+        sizes_v = ProductVariation.objects.filter(product=product).values('size')
+        colors_v = ProductVariation.objects.filter(product=product).values('color')
         return render(request, 'store_admin/edit-product.html', {'product': product, 'categorys': categorys, 'colors': colors, 'sizes_v': sizes_v, 'colors_v': colors_v, 'sizes': sizes})
     return render(request, 'store_admin/get-product.html', {'products': products})
 
@@ -550,10 +547,16 @@ def edit_product(request):
         m = len(colorss)
         for size in range(l):
             for color in range(m):
-                variation = ProductVariation.objects.filter(product=product)
-                variation.size = Size.objects.get(id=sizess[size])
-                variation.color = Color.objects.get(id=colorss[color])
-                variation.save()
+                s = Size.objects.get(id=sizess[size])
+                c = Color.objects.get(id=colorss[color])
+                vari=ProductVariation.objects.filter(size=s,color=c).exists()
+                if vari:
+                    variation = ProductVariation.objects.get(size=s,color=c)
+                    variation.size = s
+                    variation.color = c
+                    variation.save()
+                else:
+                    ProductVariation.objects.create(product=product,size=s,color=c)
         return redirect('get_product')
 
     # except Exception:
