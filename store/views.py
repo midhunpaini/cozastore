@@ -551,7 +551,7 @@ def edit_product(request):
                 c = Color.objects.get(id=colorss[color])
                 vari=ProductVariation.objects.filter(size=s,color=c).exists()
                 if vari:
-                    variation = ProductVariation.objects.get(size=s,color=c)
+                    variation = ProductVariation.objects.get(product=product,size=s,color=c)
                     variation.size = s
                     variation.color = c
                     variation.save()
