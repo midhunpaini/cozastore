@@ -550,7 +550,7 @@ def edit_product(request):
         m = len(colorss)
         for size in range(l):
             for color in range(m):
-                variation = ProductVariation.objects.get(product=product)
+                variation = ProductVariation.objects.filter(product=product)
                 variation.size = Size.objects.get(id=sizess[size])
                 variation.color = Color.objects.get(id=colorss[color])
                 variation.save()
