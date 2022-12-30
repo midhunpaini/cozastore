@@ -112,6 +112,104 @@ def dashboard(request):
 
     return render(request, 'store_admin/index.html',context)
 
+
+def monthly_order_report(request,month):
+    orders= Order.objects.all()
+    cod = Order.objects.filter(payment_method='cod').count()
+    paypal = Order.objects.filter(payment_method='paypal').count()
+    razorpay = Order.objects.filter(payment_method='razorpay').count()
+    returned = Order.objects.filter(order_date__month = month,order_status='return').count()
+    pending = Order.objects.filter(order_date__month = month,order_status='pending').count()
+    delivered = Order.objects.filter(order_date__month = month,order_status='delivered').count()
+    canceled = Order.objects.filter(order_date__month = month,order_status='canceled').count()
+    products_today = Order.objects.filter(order_date__gte=datetime.now().date())
+    
+    m = []
+    for month in range(12):
+        m.append(Order.objects.filter(order_date__month = month+1, payment_status='success').count()) 
+ 
+    
+    sales_today = 0
+    for product in products_today:
+        try:
+            price = int(product.items.product.price)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
+        t_price = price*quantity
+        sales_today+=t_price
+     
+    total_sales = 0
+    for product in orders:
+        try:
+            price = int(product.items.product.price)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
+        t_price = price*quantity
+        total_sales+=t_price
+    
+    total_proft = 0
+    no_of_items = 0
+    for product in orders:
+        try:
+            price = int(product.items.product.price)-int(product.items.product.cost)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
+        profit = price*quantity
+        total_proft+=profit
+        no_of_items+=quantity
+    
+    
+    profit_today = 0
+    no_of_items = 0
+    for product in products_today:
+        try:
+            price = int(product.items.product.price)-int(product.items.product.cost)
+            quantity = int(product.items.quantity)
+        except:
+            price = 0
+            quantity = 0
+        profit = price*quantity
+        profit_today+=profit
+        no_of_items+=quantity
+        
+        
+        
+        
+
+    context = {
+        'orders':orders,
+        'cod':cod,
+        'paypal':paypal,
+        'razorpay':razorpay,
+        'returned': returned,
+        'pending': pending,
+        'delivered': delivered,
+        'canceled': canceled,
+        'sales_today':sales_today,
+        'total_sales': total_sales,
+        'total_profit':total_proft,
+        'profit_today':profit_today,
+        'jan': m[0],
+        'feb': m[1],
+        'mar' : m[2],
+        'april':m[3],
+        'may':m[4],
+        'june':m[5],
+        'july':m[6],
+        'aug':m[7],
+        'sept':m[8],
+        'oct':m[9],
+        'nov':m[10],
+        'dec':m[11],
+    }
+    return render(request, 'store_admin/index.html',context)
+
 def get_data(request):
     data ={
         'sales':100,

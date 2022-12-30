@@ -31,4 +31,5 @@ urlpatterns = [
     path('set_category_offer',views.set_category_offer, name='set_category_offer'),
     path('set_product_offer',views.set_product_offer, name='set_product_offer'),
     path('cancel_offer',views.cancel_offer, name='cancel_offer'),
+    path('monthly_order_report/<str:month>',views.monthly_order_report, name='monthly_order_report'),
 ]
