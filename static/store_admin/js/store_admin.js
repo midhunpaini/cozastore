@@ -299,7 +299,7 @@
     });
 
     $('#monthly_order_report').change(function(){
-        let month = $('#monthly_report').val()
+        let month = $('#monthly_order_report').val()
         location.href=/adminmonthly_order_report/+ month
         
     });
