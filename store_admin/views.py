@@ -40,7 +40,6 @@ def dashboard(request):
             quantity = 0
         t_price = price*quantity
         sales_today+=t_price
-        print(t_price,'*************************************************')
      
     total_sales = 0
     for product in orders:
