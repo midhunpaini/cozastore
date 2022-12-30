@@ -969,8 +969,7 @@ def order(request):
                 make_order(items, user_id, shipping_address,
                            payment_option, discount, request, total_price)
 
-                get_user_cart(request)
-                user_cart(request)
+                
                 return JsonResponse({'success': True,  'payment': payment_option})
 
             if not error_message and payment_option == 'paypal':
